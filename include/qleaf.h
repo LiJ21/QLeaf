@@ -79,7 +79,7 @@ public:
   auto predict(const auto &features) {
 
     for (auto [i, w] : std::views::enumerate(workers_)) {
-      w.predict(features, &results_[i]);
+      results_[i] = w.predict(features);
     }
     return Reducer{}(std::span<Value>(results_));
   }
@@ -104,32 +104,34 @@ public:
     assert(n_trees_ * tree_size_ == nodes.size());
   }
 
-  void predict(const auto &fts, Value *
-#ifdef __GNUC__
-               __restrict__
-#endif
-               result) {
-    *result = 0;
+  Value predict(const auto &fts) {
+    Value result = 0;
     const Value *
 #ifdef __GNUC__
         __restrict__
 #endif
         features = fts.data();
+    const NodeT *
+#ifdef __GNUC__
+        __restrict__
+#endif
+        nodes = nodes_.data();
 
     const size_t nnodes = nodes_.size();
 
     for (size_t base = 0; base < nnodes; base += tree_size_) {
       size_t offset = 0;
       for (size_t d = 0; d < depth_; ++d) {
-        auto &n = nodes_[base + offset];
+        auto &n = nodes[base + offset];
         if (features[n.idx] < n.split + eps_) {
           offset = detail::to_left(offset);
         } else {
           offset = detail::to_right(offset);
         }
       }
-      *result += nodes_[base + offset].split;
+      result += nodes[base + offset].split;
     }
+    return result;
   }
 
 private:
@@ -141,8 +143,7 @@ private:
 };
 
 struct RegressionReducer {
-  template <typename TValue>
-  TValue operator()(std::span<TValue> results) {
+  template <typename TValue> TValue operator()(std::span<TValue> results) {
     return std::ranges::fold_left(results, TValue{}, std::plus<>());
   }
 };
