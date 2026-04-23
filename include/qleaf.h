@@ -81,7 +81,7 @@ public:
     for (auto [i, w] : std::views::enumerate(workers_)) {
       w.predict(features, &results_[i]);
     }
-    return Reducer{}(std::span<Value>(results_), n_trees_);
+    return Reducer{}(std::span<Value>(results_));
   }
 
 private:
@@ -142,8 +142,8 @@ private:
 
 struct RegressionReducer {
   template <typename TValue>
-  TValue operator()(std::span<TValue> results, size_t ntrees) {
-    return std::ranges::fold_left(results, TValue{}, std::plus<>()) / ntrees;
+  TValue operator()(std::span<TValue> results) {
+    return std::ranges::fold_left(results, TValue{}, std::plus<>());
   }
 };
 } // namespace qleaf
