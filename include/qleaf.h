@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #endif
 #include <vector>
+
 // a fast forest inference framework for shallow and perfect trees
 namespace qleaf {
 
@@ -49,10 +50,10 @@ public:
   using LoadBalancer = TLoadBalancer;
   using Reducer = TReducer;
   Inferrer(auto &&config) {
-    depth_ = config.get("depth");
+    depth_ = config.template get<size_t>("depth");
     size_t tree_size = (1uz << (depth_ + 1)) - 1;
-    size_t n_trees = config.get("trees").size();
-    nodes_.reserve(n_trees * tree_size);
+    n_trees_ = config.get("trees").size();
+    nodes_.reserve(n_trees_ * tree_size);
     for (const auto &tree_config : config.get("trees")) {
       const auto &splits = tree_config.get("splits");
       const auto &indices = tree_config.get("indices");
@@ -64,7 +65,7 @@ public:
     LoadBalancer load_balancer;
     auto config_workers = config.get("worker");
     auto n_workers = config_workers.size();
-    load_balancer.init(n_trees, n_workers);
+    load_balancer.init(n_trees_, n_workers);
 
     for (auto i : std::views::iota(0uz, n_workers)) {
       workers_.emplace_back(
@@ -76,10 +77,11 @@ public:
   }
 
   auto predict(const auto &features) {
+
     for (auto [i, w] : std::views::enumerate(workers_)) {
       w.predict(features, &results_[i]);
     }
-    return Reducer{}(std::span<Value>(results_));
+    return Reducer{}(std::span<Value>(results_), n_trees_);
   }
 
 private:
@@ -87,6 +89,7 @@ private:
   std::vector<NodeT> nodes_;
   std::vector<Value> results_;
   size_t depth_;
+  size_t n_trees_;
 };
 
 template <typename TValue> class BranchRegressionWorker {
@@ -138,8 +141,9 @@ private:
 };
 
 struct RegressionReducer {
-  template <typename TValue> TValue operator()(std::span<TValue> results) {
-    return std::ranges::fold_left(results, TValue{}, std::plus<>());
+  template <typename TValue>
+  TValue operator()(std::span<TValue> results, size_t ntrees) {
+    return std::ranges::fold_left(results, TValue{}, std::plus<>()) / ntrees;
   }
 };
 } // namespace qleaf
