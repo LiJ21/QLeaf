@@ -1,7 +1,13 @@
 #ifndef INCLUDE_QLEAF
 #define INCLUDE_QLEAF
+#include <algorithm>
+#include <cassert>
 #include <cstdint>
 #include <ranges>
+#ifdef __GNUC__
+#include <sys/cdefs.h>
+#include <sys/types.h>
+#endif
 #include <vector>
 // a fast forest inference framework for shallow and perfect trees
 namespace qleaf {
@@ -22,8 +28,9 @@ private:
   size_t q{}, r{};
 };
 
-inline size_t to_left(size_t idx) { return 2 * (idx + 1) - 1; }
-inline size_t to_right(size_t idx) { return 2 * (idx + 1); }
+// branching tool
+template <typename T> inline T to_left(T idx) { return 2 * (idx + 1) - 1; }
+template <typename T> inline T to_right(T idx) { return 2 * (idx + 1); }
 } // namespace detail
 
 template <typename TValue> struct Node {
@@ -68,11 +75,11 @@ public:
     results_ = std::vector<Value>(n_workers, {});
   }
 
-  auto predict(auto &&features) {
+  auto predict(const auto &features) {
     for (auto [i, w] : std::views::enumerate(workers_)) {
-      w.predict(std::forward<decltype(features)>(features), &results_[i]);
+      w.predict(features, &results_[i]);
     }
-    return Reducer{}(results_);
+    return Reducer{}(std::span<Value>(results_));
   }
 
 private:
@@ -80,6 +87,60 @@ private:
   std::vector<NodeT> nodes_;
   std::vector<Value> results_;
   size_t depth_;
+};
+
+template <typename TValue> class BranchRegressionWorker {
+public:
+  using Value = TValue;
+  using NodeT = Node<Value>;
+  constexpr static Value kEps{1e-10};
+  BranchRegressionWorker(auto &&config, size_t depth, auto &&nodes)
+      : nodes_(nodes), depth_(depth), tree_size_((1uz << (depth_ + 1)) - 1),
+        n_trees_(nodes.size() / tree_size_),
+        eps_(config.template get<bool>("has_equal") ? kEps : 0) {
+    assert(n_trees_ * tree_size_ == nodes.size());
+  }
+
+  void predict(const auto &fts, Value *
+#ifdef __GNUC__
+               __restrict__
+#endif
+               result) {
+    *result = 0;
+    const Value *
+#ifdef __GNUC__
+        __restrict__
+#endif
+        features = fts.data();
+
+    const size_t nnodes = nodes_.size();
+
+    for (size_t base = 0; base < nnodes; base += tree_size_) {
+      size_t offset = 0;
+      for (size_t d = 0; d < depth_; ++d) {
+        auto &n = nodes_[base + offset];
+        if (features[n.idx] < n.split + eps_) {
+          offset = detail::to_left(offset);
+        } else {
+          offset = detail::to_right(offset);
+        }
+      }
+      *result += nodes_[base + offset].split;
+    }
+  }
+
+private:
+  const std::span<NodeT> nodes_;
+  const size_t depth_;
+  const size_t tree_size_;
+  const size_t n_trees_;
+  const Value eps_{};
+};
+
+struct RegressionReducer {
+  template <typename TValue> TValue operator()(std::span<TValue> results) {
+    return std::ranges::fold_left(results, TValue{}, std::plus<>());
+  }
 };
 } // namespace qleaf
 #endif
