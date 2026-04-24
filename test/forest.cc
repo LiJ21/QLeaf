@@ -244,6 +244,86 @@ TEST(MaskTest, Depth3AllBitsAccountedFor) {
   EXPECT_TRUE(result.test(7));
 }
 
+// 3 trees, 2 workers: FairBalancer gives worker 0 trees 0+1 and worker 1 tree 2,
+// so worker 0's predict loop runs with base=0 and base=tree_size.
+static nlohmann::json make_forest3() {
+  auto make_tree = [](std::vector<uint16_t> indices, std::vector<float> splits) {
+    return nlohmann::json{{"indices", indices}, {"splits", splits}};
+  };
+  auto t1 = make_tree({0,1,1,0,0,0,0}, {0.5f,0.5f,0.5f,  1.f,  2.f,  3.f,  4.f});
+  auto t2 = make_tree({0,1,1,0,0,0,0}, {0.5f,0.5f,0.5f, 10.f, 20.f, 30.f, 40.f});
+  auto t3 = make_tree({0,1,1,0,0,0,0}, {0.5f,0.5f,0.5f,100.f,200.f,300.f,400.f});
+  return nlohmann::json{{"depth", 2},
+                        {"trees", {t1, t2, t3}},
+                        {"worker",
+                         {{{"has_equal", false}}, {{"has_equal", false}}}}};
+}
+
+// BothLeft=111, LeftThenRight=222, RightThenLeft=333, BothRight=444
+
+class ForestTest3 : public ::testing::Test {
+protected:
+  void SetUp() override {
+    json_ = make_forest3();
+    config_ = std::make_unique<qleaf::Config>(json_);
+    inf_ = std::make_unique<Inferrer>(*config_);
+  }
+  nlohmann::json json_;
+  std::unique_ptr<qleaf::Config> config_;
+  std::unique_ptr<Inferrer> inf_;
+};
+
+TEST_F(ForestTest3, BothLeft)      { EXPECT_FLOAT_EQ(inf_->predict(std::vector<float>{0.3f, 0.3f}), 111.f); }
+TEST_F(ForestTest3, LeftThenRight) { EXPECT_FLOAT_EQ(inf_->predict(std::vector<float>{0.3f, 0.7f}), 222.f); }
+TEST_F(ForestTest3, RightThenLeft) { EXPECT_FLOAT_EQ(inf_->predict(std::vector<float>{0.7f, 0.3f}), 333.f); }
+TEST_F(ForestTest3, BothRight)     { EXPECT_FLOAT_EQ(inf_->predict(std::vector<float>{0.7f, 0.7f}), 444.f); }
+
+class ThreadedForestTest3 : public ::testing::Test {
+protected:
+  using Worker = qleaf::BranchRegressionWorker<float, qleaf::TreeNodeBuffer<float>::Span>;
+  using Threaded = qleaf::ThreadedWorker<Worker>;
+
+  void SetUp() override {
+    json_ = make_forest3();
+    config_ = std::make_unique<qleaf::Config>(json_);
+    size_t depth = config_->get<size_t>("depth");
+    size_t tree_size = (1uz << (depth + 1)) - 1;
+    size_t n_trees = config_->get("trees").size();
+    nodes_.reserve(n_trees * tree_size);
+    for (const auto &tree_config : config_->get("trees")) {
+      const auto &splits = tree_config.get("splits");
+      const auto &indices = tree_config.get("indices");
+      for (size_t i = 0; i < tree_size; ++i)
+        nodes_.emplace_back(indices[i].get<size_t>(), splits[i].get<float>());
+    }
+    qleaf::detail::FairBalancer balancer;
+    size_t n_workers = 2;
+    balancer.init(n_trees, n_workers);
+    auto worker_configs = config_->get("worker");
+    for (auto i : std::views::iota(0uz, n_workers))
+      workers_.push_back(std::make_unique<Threaded>(
+          worker_configs[i], depth,
+          nodes_.span(balancer.start(i) * tree_size, balancer.len(i) * tree_size)));
+  }
+
+  float predict(std::vector<float> fts) {
+    for (auto &w : workers_) w->predict(fts);
+    float sum = 0;
+    for (auto &w : workers_) sum += w->get();
+    return sum;
+  }
+
+  nlohmann::json json_;
+  std::unique_ptr<qleaf::Config> config_;
+  qleaf::TreeNodeBuffer<float> nodes_;
+  std::vector<std::unique_ptr<Threaded>> workers_;
+};
+
+TEST_F(ThreadedForestTest3, BothLeft)      { EXPECT_FLOAT_EQ(predict({0.3f, 0.3f}), 111.f); }
+TEST_F(ThreadedForestTest3, LeftThenRight) { EXPECT_FLOAT_EQ(predict({0.3f, 0.7f}), 222.f); }
+TEST_F(ThreadedForestTest3, RightThenLeft) { EXPECT_FLOAT_EQ(predict({0.7f, 0.3f}), 333.f); }
+TEST_F(ThreadedForestTest3, BothRight)     { EXPECT_FLOAT_EQ(predict({0.7f, 0.7f}), 444.f); }
+
 using BranchInferrer = Inferrer;
 
 using QSInferrer =
@@ -312,4 +392,38 @@ TEST_F(QuickScorerTest, SequentialPredictions) {
   EXPECT_FLOAT_EQ(qs_->predict(std::vector<float>{0.3f, 0.3f}), 11.f);
   EXPECT_FLOAT_EQ(qs_->predict(std::vector<float>{0.7f, 0.7f}), 44.f);
   EXPECT_FLOAT_EQ(qs_->predict(std::vector<float>{0.3f, 0.3f}), 11.f);
+}
+
+// ─── 3-tree QuickScorer: exercises base > 0 in bitmask predict loop ───
+
+class QuickScorerTest3 : public ::testing::Test {
+protected:
+  void SetUp() override {
+    json_ = make_forest3();
+    config_ = std::make_unique<qleaf::Config>(json_);
+    qs_ = std::make_unique<QSInferrer>(*config_);
+    branch_ = std::make_unique<BranchInferrer>(*config_);
+  }
+  nlohmann::json json_;
+  std::unique_ptr<qleaf::Config> config_;
+  std::unique_ptr<QSInferrer> qs_;
+  std::unique_ptr<BranchInferrer> branch_;
+};
+
+TEST_F(QuickScorerTest3, BothLeft)      { EXPECT_FLOAT_EQ(qs_->predict(std::vector<float>{0.3f, 0.3f}), 111.f); }
+TEST_F(QuickScorerTest3, LeftThenRight) { EXPECT_FLOAT_EQ(qs_->predict(std::vector<float>{0.3f, 0.7f}), 222.f); }
+TEST_F(QuickScorerTest3, RightThenLeft) { EXPECT_FLOAT_EQ(qs_->predict(std::vector<float>{0.7f, 0.3f}), 333.f); }
+TEST_F(QuickScorerTest3, BothRight)     { EXPECT_FLOAT_EQ(qs_->predict(std::vector<float>{0.7f, 0.7f}), 444.f); }
+
+TEST_F(QuickScorerTest3, MatchesBranching) {
+  for (const auto &fts : std::vector<std::vector<float>>{
+           {0.3f, 0.3f}, {0.3f, 0.7f}, {0.7f, 0.3f}, {0.7f, 0.7f}}) {
+    EXPECT_FLOAT_EQ(qs_->predict(fts), branch_->predict(fts))
+        << "Mismatch at [" << fts[0] << ", " << fts[1] << "]";
+  }
+}
+
+TEST_F(QuickScorerTest3, ExactSplit) {
+  std::vector<float> fts = {0.5f, 0.5f};
+  EXPECT_FLOAT_EQ(qs_->predict(fts), branch_->predict(fts));
 }

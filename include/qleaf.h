@@ -137,6 +137,52 @@ private:
   std::vector<NodeT> buffer_;
 };
 
+template <typename TValue> class CompactNodeBuffer {
+public:
+  using Value = TValue;
+  Value split(size_t i) const { return splits_[i]; }
+  size_t idx(size_t i) const { return indices_[i]; }
+  class Span {
+  public:
+    Span(const Value *splits, const size_t *indices, size_t len)
+        : splits_(splits), indices_(indices), size_(len) {}
+    Value split(size_t i) const { return splits_[i]; }
+    size_t idx(size_t i) const { return indices_[i]; }
+    size_t size() const { return size_; }
+
+  private:
+    const Value *
+#ifdef __GNUC__
+        __restrict__
+#endif
+        splits_;
+    const size_t *
+#ifdef __GNUC__
+        __restrict__
+#endif
+        indices_;
+    size_t size_;
+  };
+
+  Span span(size_t start, size_t len) const {
+    return Span(splits_.data() + start, indices_.data() + start, len);
+  }
+
+  void emplace_back(size_t idx, Value split) {
+    indices_.emplace_back(idx);
+    splits_.emplace_back(split);
+  }
+
+  void reserve(size_t n) {
+    splits_.reserve(n);
+    indices_.reserve(n);
+  }
+
+private:
+  std::vector<Value> splits_;
+  std::vector<size_t> indices_;
+};
+
 template <typename TValue, template <typename, typename> typename TWorker,
           template <typename> typename TNodeBuffer, typename TLoadBalancer,
           typename TReducer>
@@ -344,10 +390,10 @@ public:
         size_t idx = base + i;
         mask &= features[nodes_.idx(idx)] < nodes_.split(idx) + kEps
                     ? ones
-                    : kMasks[idx];
+                    : kMasks[i];
       }
       auto leaf_idx = detail::leaf_mask_to_index<kMaxDepth>(mask, depth_);
-      result_ += nodes_.split(internal_num + leaf_idx);
+      result_ += nodes_.split(base + internal_num + leaf_idx);
     }
   }
 
