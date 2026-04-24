@@ -186,3 +186,129 @@ TEST_F(ThreadedForestTest, StressAllPaths) {
         ASSERT_FLOAT_EQ(predict(fts), expected) << "Failed at iteration " << i;
     }
 }
+
+// ─── Mask generation tests ───
+
+TEST(MaskTest, Depth1) {
+    // Tree:    node 0
+    //         /      \
+    //       L0       L1
+    // Going right at node 0 clears left subtree {L0}
+    constexpr auto masks = qleaf::detail::get_mask<1>();
+    ASSERT_EQ(masks.size(), 1);
+    // mask[0]: bit 0 cleared (L0), bit 1 set (L1) = 0b10
+    EXPECT_FALSE(masks[0].test(0));
+    EXPECT_TRUE(masks[0].test(1));
+}
+
+TEST(MaskTest, Depth2) {
+    //            node 0
+    //           /      \
+    //       node 1    node 2
+    //       /   \     /   \
+    //     L0   L1   L2   L3
+    constexpr auto masks = qleaf::detail::get_mask<2>();
+    ASSERT_EQ(masks.size(), 3);
+
+    // mask[0] (node 0): clears left {L0, L1} = 0b1100
+    EXPECT_FALSE(masks[0].test(0));
+    EXPECT_FALSE(masks[0].test(1));
+    EXPECT_TRUE(masks[0].test(2));
+    EXPECT_TRUE(masks[0].test(3));
+
+    // mask[1] (node 1): clears left {L0} = 0b1110
+    EXPECT_FALSE(masks[1].test(0));
+    EXPECT_TRUE(masks[1].test(1));
+    EXPECT_TRUE(masks[1].test(2));
+    EXPECT_TRUE(masks[1].test(3));
+
+    // mask[2] (node 2): clears left {L2} = 0b1011
+    EXPECT_TRUE(masks[2].test(0));
+    EXPECT_TRUE(masks[2].test(1));
+    EXPECT_FALSE(masks[2].test(2));
+    EXPECT_TRUE(masks[2].test(3));
+}
+
+TEST(MaskTest, Depth3AllBitsAccountedFor) {
+    constexpr auto masks = qleaf::detail::get_mask<3>();
+    ASSERT_EQ(masks.size(), 7);  // 2^3 - 1 internal nodes
+
+    // AND all masks together: should clear all bits except the last leaf
+    std::bitset<8> result;
+    result.set();
+    for (size_t i = 0; i < 7; ++i)
+        result &= masks[i];
+
+    // Only the rightmost leaf (L7) survives all masks
+    EXPECT_EQ(result.count(), 1);
+    EXPECT_TRUE(result.test(7));
+}
+
+using BranchInferrer = Inferrer;
+
+using QSInferrer = qleaf::Inferrer<
+    float,
+    qleaf::BitmaskRegressionWorker,
+    qleaf::detail::FairBalancer,
+    qleaf::RegressionReducer>;
+
+class QuickScorerTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        json_   = make_forest();
+        config_ = std::make_unique<qleaf::Config>(json_);
+        qs_     = std::make_unique<QSInferrer>(*config_);
+        branch_ = std::make_unique<BranchInferrer>(*config_);
+    }
+    nlohmann::json json_;
+    std::unique_ptr<qleaf::Config> config_;
+    std::unique_ptr<QSInferrer> qs_;
+    std::unique_ptr<BranchInferrer> branch_;
+};
+
+// Same four paths, verify QuickScorer matches expected values
+
+TEST_F(QuickScorerTest, BothLeft) {
+    std::vector<float> fts = {0.3f, 0.3f};
+    EXPECT_FLOAT_EQ(qs_->predict(fts), 11.f);
+}
+
+TEST_F(QuickScorerTest, LeftThenRight) {
+    std::vector<float> fts = {0.3f, 0.7f};
+    EXPECT_FLOAT_EQ(qs_->predict(fts), 22.f);
+}
+
+TEST_F(QuickScorerTest, RightThenLeft) {
+    std::vector<float> fts = {0.7f, 0.3f};
+    EXPECT_FLOAT_EQ(qs_->predict(fts), 33.f);
+}
+
+TEST_F(QuickScorerTest, BothRight) {
+    std::vector<float> fts = {0.7f, 0.7f};
+    EXPECT_FLOAT_EQ(qs_->predict(fts), 44.f);
+}
+
+// Cross-check: QuickScorer matches Branching for all paths
+TEST_F(QuickScorerTest, MatchesBranching) {
+    std::vector<std::vector<float>> inputs = {
+        {0.3f, 0.3f}, {0.3f, 0.7f},
+        {0.7f, 0.3f}, {0.7f, 0.7f},
+    };
+    for (const auto &fts : inputs) {
+        EXPECT_FLOAT_EQ(qs_->predict(fts), branch_->predict(fts))
+            << "Mismatch at features [" << fts[0] << ", " << fts[1] << "]";
+    }
+}
+
+// Boundary: feature exactly at split
+TEST_F(QuickScorerTest, ExactSplit) {
+    std::vector<float> fts = {0.5f, 0.5f};
+    EXPECT_FLOAT_EQ(qs_->predict(fts), branch_->predict(fts));
+}
+
+// Sequential predictions to verify state reset
+TEST_F(QuickScorerTest, SequentialPredictions) {
+    EXPECT_FLOAT_EQ(qs_->predict(std::vector<float>{0.3f, 0.3f}), 11.f);
+    EXPECT_FLOAT_EQ(qs_->predict(std::vector<float>{0.7f, 0.7f}), 44.f);
+    EXPECT_FLOAT_EQ(qs_->predict(std::vector<float>{0.3f, 0.3f}), 11.f);
+}

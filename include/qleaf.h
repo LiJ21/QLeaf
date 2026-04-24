@@ -12,6 +12,7 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #endif
+#include <iostream>
 #include <vector>
 
 // a fast forest inference framework for shallow and perfect trees
@@ -57,7 +58,7 @@ template <size_t tMaxDepth> consteval auto get_mask() {
     for (size_t i = 0; i < num_per_level; ++i) {
       auto sub_size = 1uz << (kMaxDepth - d);
       auto len = sub_size >> 1;
-      auto start = sub_size * i + len;
+      auto start = sub_size * i;
       mask[idx++] = ~((mask_full >> (kMaxLeaves - len)) << start);
     }
   }
@@ -253,6 +254,7 @@ struct RegressionReducer {
 constexpr static size_t kDefaultMaxDepth{6};
 template <typename TValue, size_t tMaxDepth = kDefaultMaxDepth>
 class BitmaskRegressionWorker {
+public:
   using Value = TValue;
   using NodeT = Node<Value>;
   constexpr static size_t kMaxDepth{tMaxDepth};
@@ -284,16 +286,17 @@ class BitmaskRegressionWorker {
 
     const size_t nnodes = nodes_.size();
 
+    auto internal_num = tree_size_ - (1 << depth_);
+    auto ones = detail::get_mask_full<Mask>();
     for (size_t base = 0; base < nnodes; base += tree_size_) {
-      auto mask = detail::get_mask_full<Mask>();
-      auto ones = mask;
-      auto internal_num = tree_size_ - (1 << depth_);
+      auto mask = ones;
       for (size_t i = 0; i < internal_num; ++i) {
         size_t idx = base + i;
         auto &n = nodes[idx];
-        mask &= features[n.idx] < n.split + kEps ? kMasks[idx] : ones;
+        mask &= features[n.idx] < n.split + kEps ? ones : kMasks[idx];
       }
-      result_ += nodes[detail::leaf_mask_to_index<kMaxDepth>(mask, depth_)];
+      auto leaf_idx = detail::leaf_mask_to_index<kMaxDepth>(mask, depth_);
+      result_ += nodes[internal_num + leaf_idx].split;
     }
   }
 
