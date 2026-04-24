@@ -4,10 +4,14 @@
 #include <atomic>
 #include <bitset>
 #include <cassert>
+#include <concepts>
 #include <cstdint>
+#include <format>
 #include <ranges>
 #include <stop_token>
 #include <thread>
+#include <type_traits>
+#include <utility>
 #ifdef __GNUC__
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -78,20 +82,71 @@ template <size_t tMaxDepth> size_t leaf_mask_to_index(auto &&mask, auto depth) {
 }
 } // namespace detail
 
-template <typename TValue> struct Node {
+template <typename TNodeBuffer, typename TValue>
+concept CNodeBuffer =
+    requires(TNodeBuffer nodes, typename TNodeBuffer::Span span, size_t start,
+             size_t len, TValue split) {
+      { nodes.span(start, len) } -> std::same_as<typename TNodeBuffer::Span>;
+      { nodes.split(start) } -> std::same_as<TValue>;
+      { nodes.idx(start) } -> std::convertible_to<size_t>;
+      { span.split(start) } -> std::same_as<TValue>;
+      { span.idx(start) } -> std::convertible_to<size_t>;
+      { nodes.emplace_back(start, split) } -> std::same_as<void>;
+      { nodes.reserve(len) } -> std::same_as<void>;
+    };
+
+template <typename TValue> struct TreeNode {
   using Value = TValue;
-  std::uint16_t idx;
+  size_t idx;
   Value split;
 };
 
-template <typename TValue, template <typename> typename TWorker,
-          typename TLoadBalancer, typename TReducer>
+template <typename TValue> class TreeNodeBuffer {
+public:
+  using Value = TValue;
+  using NodeT = TreeNode<Value>;
+  Value split(size_t i) const { return buffer_[i].split; }
+  size_t idx(size_t i) const { return buffer_[i].idx; }
+  class Span {
+  public:
+    Span(const NodeT *buffer, size_t len) : buffer_(buffer), size_(len) {}
+    Value split(size_t i) const { return buffer_[i].split; }
+    size_t idx(size_t i) const { return buffer_[i].idx; }
+    size_t size() const { return size_; }
+
+  private:
+    const NodeT *
+#ifdef __GNUC__
+        __restrict__
+#endif
+        buffer_;
+    size_t size_;
+  };
+
+  Span span(size_t start, size_t len) const {
+    return Span(buffer_.data() + start, len);
+  }
+
+  void emplace_back(size_t idx, Value split) {
+    buffer_.emplace_back(idx, split);
+  }
+
+  void reserve(size_t n) { buffer_.reserve(n); }
+
+private:
+  std::vector<NodeT> buffer_;
+};
+
+template <typename TValue, template <typename, typename> typename TWorker,
+          template <typename> typename TNodeBuffer, typename TLoadBalancer,
+          typename TReducer>
+  requires CNodeBuffer<TNodeBuffer<TValue>, TValue>
 class Inferrer {
 public:
   using Value = TValue;
-  using NodeT = Node<Value>;
-  using Worker = TWorker<Value>;
   using LoadBalancer = TLoadBalancer;
+  using NodeBuffer = TNodeBuffer<Value>;
+  using Worker = TWorker<Value, typename NodeBuffer::Span>;
   using Reducer = TReducer;
   Inferrer(auto &&config) {
     depth_ = config.template get<size_t>("depth");
@@ -102,7 +157,7 @@ public:
       const auto &splits = tree_config.get("splits");
       const auto &indices = tree_config.get("indices");
       for (size_t i = 0; i < tree_size; ++i) {
-        nodes_.emplace_back(indices[i].template get<uint16_t>(),
+        nodes_.emplace_back(indices[i].template get<size_t>(),
                             splits[i].template get<Value>());
       }
     }
@@ -112,16 +167,14 @@ public:
     load_balancer.init(n_trees_, n_workers);
 
     for (auto i : std::views::iota(0uz, n_workers)) {
-      workers_.emplace_back(
-          config_workers[i], depth_,
-          std::span(nodes_.data() + load_balancer.start(i) * tree_size,
-                    load_balancer.len(i) * tree_size));
+      workers_.emplace_back(config_workers[i], depth_,
+                            nodes_.span(load_balancer.start(i) * tree_size,
+                                        load_balancer.len(i) * tree_size));
     }
     results_ = std::vector<Value>(n_workers, {});
   }
 
   auto predict(const auto &features) {
-
     for (auto &w : workers_) {
       w.predict(features);
     }
@@ -133,7 +186,7 @@ public:
 
 private:
   std::vector<Worker> workers_;
-  std::vector<NodeT> nodes_;
+  NodeBuffer nodes_;
   std::vector<Value> results_;
   size_t depth_;
   size_t n_trees_;
@@ -145,7 +198,8 @@ public:
   using Value = typename Worker::Value;
 
   ThreadedWorker(auto &&config, size_t depth, auto &&nodes)
-      : worker_(config, depth, nodes) {
+      : worker_(std::forward<decltype(config)>(config), depth,
+                std::forward<decltype(nodes)>(nodes)) {
     features_.store(nullptr, std::memory_order_relaxed);
     size_.store(0, std::memory_order_relaxed);
     ready_.store(false, std::memory_order_relaxed);
@@ -193,12 +247,12 @@ private:
   std::jthread thread_;
 };
 
-template <typename TValue> class BranchRegressionWorker {
+template <typename TValue, typename TSpan> class BranchRegressionWorker {
 public:
   using Value = TValue;
-  using NodeT = Node<Value>;
+  using Span = TSpan;
   constexpr static Value kEps{1e-10};
-  BranchRegressionWorker(auto &&config, size_t depth, auto &&nodes)
+  BranchRegressionWorker(auto &&config, size_t depth, Span nodes)
       : nodes_(nodes), depth_(depth), tree_size_((1uz << (depth_ + 1)) - 1),
         n_trees_(nodes.size() / tree_size_),
         eps_(config.template get<bool>("has_equal") ? kEps : 0) {
@@ -212,32 +266,33 @@ public:
         __restrict__
 #endif
         features = fts.data();
-    const NodeT *
-#ifdef __GNUC__
-        __restrict__
-#endif
-        nodes = nodes_.data();
+    //     const NodeT *
+    // #ifdef __GNUC__
+    //         __restrict__
+    // #endif
+    //         nodes = nodes_.data();
 
     const size_t nnodes = nodes_.size();
 
     for (size_t base = 0; base < nnodes; base += tree_size_) {
       size_t offset = 0;
       for (size_t d = 0; d < depth_; ++d) {
-        auto &n = nodes[base + offset];
-        if (features[n.idx] < n.split + eps_) {
+        // auto &n = nodes[base + offset];
+        auto idx = base + offset;
+        if (features[nodes_.idx(idx)] < nodes_.split(idx) + eps_) {
           offset = detail::to_left(offset);
         } else {
           offset = detail::to_right(offset);
         }
       }
-      result_ += nodes[base + offset].split;
+      result_ += nodes_.split(base + offset);
     }
   }
 
   Value get() const { return result_; }
 
 private:
-  const std::span<NodeT> nodes_;
+  const Span nodes_;
   const size_t depth_;
   const size_t tree_size_;
   const size_t n_trees_;
@@ -252,11 +307,11 @@ struct RegressionReducer {
 };
 
 constexpr static size_t kDefaultMaxDepth{6};
-template <typename TValue, size_t tMaxDepth = kDefaultMaxDepth>
+template <typename TValue, typename TSpan, size_t tMaxDepth = kDefaultMaxDepth>
 class BitmaskRegressionWorker {
 public:
   using Value = TValue;
-  using NodeT = Node<Value>;
+  using Span = TSpan;
   constexpr static size_t kMaxDepth{tMaxDepth};
   constexpr static size_t kMaxTreeSize{(1 << (tMaxDepth + 1)) - 1};
   constexpr static size_t kMaxLeaves{1 << tMaxDepth};
@@ -264,7 +319,7 @@ public:
   constexpr static Value kEps{1e-10};
   // mask can be precomputed in compile time for perfect trees
   constexpr static auto kMasks = detail::get_mask<kMaxDepth>();
-  BitmaskRegressionWorker(auto &&config, size_t depth, auto &&nodes)
+  BitmaskRegressionWorker(auto &&config, size_t depth, Span nodes)
       : nodes_(nodes), depth_(depth), tree_size_((1uz << (depth_ + 1)) - 1),
         n_trees_(nodes.size() / tree_size_),
         eps_(config.template get<bool>("has_equal") ? kEps : 0) {
@@ -278,11 +333,6 @@ public:
         __restrict__
 #endif
         features = fts.data();
-    const NodeT *
-#ifdef __GNUC__
-        __restrict__
-#endif
-        nodes = nodes_.data();
 
     const size_t nnodes = nodes_.size();
 
@@ -292,18 +342,19 @@ public:
       auto mask = ones;
       for (size_t i = 0; i < internal_num; ++i) {
         size_t idx = base + i;
-        auto &n = nodes[idx];
-        mask &= features[n.idx] < n.split + kEps ? ones : kMasks[idx];
+        mask &= features[nodes_.idx(idx)] < nodes_.split(idx) + kEps
+                    ? ones
+                    : kMasks[idx];
       }
       auto leaf_idx = detail::leaf_mask_to_index<kMaxDepth>(mask, depth_);
-      result_ += nodes[internal_num + leaf_idx].split;
+      result_ += nodes_.split(internal_num + leaf_idx);
     }
   }
 
   Value get() const { return result_; }
 
 private:
-  const std::span<NodeT> nodes_;
+  const Span nodes_;
   const size_t depth_;
   const size_t tree_size_;
   const size_t n_trees_;
