@@ -1,9 +1,12 @@
 #ifndef INCLUDE_QLEAF
 #define INCLUDE_QLEAF
 #include <algorithm>
+#include <atomic>
 #include <cassert>
 #include <cstdint>
 #include <ranges>
+#include <stop_token>
+#include <thread>
 #ifdef __GNUC__
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -78,8 +81,11 @@ public:
 
   auto predict(const auto &features) {
 
-    for (auto [i, w] : std::views::enumerate(workers_)) {
-      results_[i] = w.predict(features);
+    for (auto &w : workers_) {
+      w.predict(features);
+    }
+    for (auto i : std::views::iota(0uz, workers_.size())) {
+      results_[i] = workers_[i].get();
     }
     return Reducer{}(std::span<Value>(results_));
   }
@@ -90,6 +96,61 @@ private:
   std::vector<Value> results_;
   size_t depth_;
   size_t n_trees_;
+};
+
+template <typename TWorker> class ThreadedWorker {
+public:
+  using Worker = TWorker;
+  using Value = typename Worker::Value;
+
+  ThreadedWorker(auto &&config, size_t depth, auto &&nodes)
+      : worker_(config, depth, nodes) {
+    features_.store(nullptr, std::memory_order_relaxed);
+    size_.store(0, std::memory_order_relaxed);
+    ready_.store(false, std::memory_order_relaxed);
+
+    auto do_work = [this](std::stop_token st) {
+      while (!st.stop_requested()) {
+        const Value *features{};
+        if ((features = this->features_.load(std::memory_order_acquire))) {
+          size_t size = this->size_.load(std::memory_order_acquire);
+          features_.store(nullptr, std::memory_order_release);
+          worker_.predict(
+              std::span(features, size));
+          ready_.store(true, std::memory_order_release);
+        }
+      }
+    };
+
+    thread_ = std::jthread(do_work);
+  }
+
+  void predict(const auto &fts) {
+    size_.store(fts.size(), std::memory_order_relaxed);
+    features_.store(fts.data(), std::memory_order_release);
+  }
+
+  Value get() {
+    while (!ready_.load(std::memory_order_acquire)) {
+#ifdef PAUSE_SPIN
+#if defined(__x86_64__) || defined(_M_X64)
+      _mm_pause();
+#elif defined(__aarch64__)
+      __asm__ __volatile__("yield" ::: "memory");
+#endif
+#endif
+    }
+    Value ret = worker_.get();
+    ready_.store(false, std::memory_order_release);
+    return ret;
+  }
+
+private:
+  std::atomic<const Value *> features_;
+  std::atomic<size_t> size_;
+  std::atomic<bool> ready_;
+  Worker worker_;
+  std::jthread thread_;
 };
 
 template <typename TValue> class BranchRegressionWorker {
@@ -104,8 +165,8 @@ public:
     assert(n_trees_ * tree_size_ == nodes.size());
   }
 
-  Value predict(const auto &fts) {
-    Value result = 0;
+  void predict(const auto &fts) {
+    result_ = 0;
     const Value *
 #ifdef __GNUC__
         __restrict__
@@ -129,10 +190,11 @@ public:
           offset = detail::to_right(offset);
         }
       }
-      result += nodes[base + offset].split;
+      result_ += nodes[base + offset].split;
     }
-    return result;
   }
+
+  Value get() const { return result_; }
 
 private:
   const std::span<NodeT> nodes_;
@@ -140,6 +202,7 @@ private:
   const size_t tree_size_;
   const size_t n_trees_;
   const Value eps_{};
+  Value result_{};
 };
 
 struct RegressionReducer {
