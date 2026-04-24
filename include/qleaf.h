@@ -2,6 +2,7 @@
 #define INCLUDE_QLEAF
 #include <algorithm>
 #include <atomic>
+#include <bitset>
 #include <cassert>
 #include <cstdint>
 #include <ranges>
@@ -35,6 +36,45 @@ private:
 // branching tool
 template <typename T> inline T to_left(T idx) { return 2 * (idx + 1) - 1; }
 template <typename T> inline T to_right(T idx) { return 2 * (idx + 1); }
+
+// leaf mask tool
+template <typename TMask> consteval auto get_mask_full() {
+  TMask ret;
+  ret.set();
+  return ret;
+}
+
+template <size_t tMaxDepth> consteval auto get_mask() {
+  constexpr size_t kMaxDepth{tMaxDepth};
+  constexpr size_t kMaxTreeSize{(1 << (tMaxDepth + 1)) - 1};
+  constexpr size_t kMaxLeaves{1 << kMaxDepth};
+  using Mask = std::bitset<kMaxLeaves>;
+  std::array<Mask, kMaxTreeSize - kMaxLeaves> mask;
+  auto mask_full = get_mask_full<Mask>();
+  size_t num_per_level = 1uz;
+  size_t idx = 0;
+  for (size_t d = 0; d < kMaxDepth; ++d, num_per_level <<= 1) {
+    for (size_t i = 0; i < num_per_level; ++i) {
+      auto sub_size = 1uz << (kMaxDepth - d);
+      auto len = sub_size >> 1;
+      auto start = sub_size * i + len;
+      mask[idx++] = ~((mask_full >> (kMaxLeaves - len)) << start);
+    }
+  }
+  return mask;
+}
+
+template <size_t tMaxDepth> size_t leaf_mask_to_index(auto &&mask, auto depth) {
+  constexpr size_t kMaxDepth{tMaxDepth};
+  size_t bit;
+  if constexpr (kMaxDepth <= 6) {
+    bit = std::countr_zero(mask.to_ullong());
+  } else {
+    bit = mask._Find_first();
+  }
+  auto leaf = bit >> (kMaxDepth - depth);
+  return leaf;
+}
 } // namespace detail
 
 template <typename TValue> struct Node {
@@ -115,8 +155,7 @@ public:
         if ((features = this->features_.load(std::memory_order_acquire))) {
           size_t size = this->size_.load(std::memory_order_acquire);
           features_.store(nullptr, std::memory_order_release);
-          worker_.predict(
-              std::span(features, size));
+          worker_.predict(std::span(features, size));
           ready_.store(true, std::memory_order_release);
         }
       }
@@ -209,6 +248,64 @@ struct RegressionReducer {
   template <typename TValue> TValue operator()(std::span<TValue> results) {
     return std::ranges::fold_left(results, TValue{}, std::plus<>());
   }
+};
+
+constexpr static size_t kDefaultMaxDepth{6};
+template <typename TValue, size_t tMaxDepth = kDefaultMaxDepth>
+class BitmaskRegressionWorker {
+  using Value = TValue;
+  using NodeT = Node<Value>;
+  constexpr static size_t kMaxDepth{tMaxDepth};
+  constexpr static size_t kMaxTreeSize{(1 << (tMaxDepth + 1)) - 1};
+  constexpr static size_t kMaxLeaves{1 << tMaxDepth};
+  using Mask = std::bitset<kMaxLeaves>;
+  constexpr static Value kEps{1e-10};
+  // mask can be precomputed in compile time for perfect trees
+  constexpr static auto kMasks = detail::get_mask<kMaxDepth>();
+  BitmaskRegressionWorker(auto &&config, size_t depth, auto &&nodes)
+      : nodes_(nodes), depth_(depth), tree_size_((1uz << (depth_ + 1)) - 1),
+        n_trees_(nodes.size() / tree_size_),
+        eps_(config.template get<bool>("has_equal") ? kEps : 0) {
+    assert(n_trees_ * tree_size_ == nodes.size());
+  }
+
+  void predict(const auto &fts) {
+    result_ = 0;
+    const Value *
+#ifdef __GNUC__
+        __restrict__
+#endif
+        features = fts.data();
+    const NodeT *
+#ifdef __GNUC__
+        __restrict__
+#endif
+        nodes = nodes_.data();
+
+    const size_t nnodes = nodes_.size();
+
+    for (size_t base = 0; base < nnodes; base += tree_size_) {
+      auto mask = detail::get_mask_full<Mask>();
+      auto ones = mask;
+      auto internal_num = tree_size_ - (1 << depth_);
+      for (size_t i = 0; i < internal_num; ++i) {
+        size_t idx = base + i;
+        auto &n = nodes[idx];
+        mask &= features[n.idx] < n.split + kEps ? kMasks[idx] : ones;
+      }
+      result_ += nodes[detail::leaf_mask_to_index<kMaxDepth>(mask, depth_)];
+    }
+  }
+
+  Value get() const { return result_; }
+
+private:
+  const std::span<NodeT> nodes_;
+  const size_t depth_;
+  const size_t tree_size_;
+  const size_t n_trees_;
+  const Value eps_{};
+  Value result_{};
 };
 } // namespace qleaf
 #endif
