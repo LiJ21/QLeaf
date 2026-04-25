@@ -312,24 +312,15 @@ public:
         __restrict__
 #endif
         features = fts.data();
-    //     const NodeT *
-    // #ifdef __GNUC__
-    //         __restrict__
-    // #endif
-    //         nodes = nodes_.data();
 
     const size_t nnodes = nodes_.size();
 
     for (size_t base = 0; base < nnodes; base += tree_size_) {
       size_t offset = 0;
       for (size_t d = 0; d < depth_; ++d) {
-        // auto &n = nodes[base + offset];
         auto idx = base + offset;
-        if (features[nodes_.idx(idx)] < nodes_.split(idx) + eps_) {
-          offset = detail::to_left(offset);
-        } else {
-          offset = detail::to_right(offset);
-        }
+        size_t to_left = features[nodes_.idx(idx)] < nodes_.split(idx) + eps_;
+        offset = 2 * (offset + 1) - to_left;
       }
       result_ += nodes_.split(base + offset);
     }
