@@ -5,18 +5,14 @@
 #include <bitset>
 #include <cassert>
 #include <concepts>
-#include <cstdint>
-#include <format>
 #include <ranges>
 #include <stop_token>
 #include <thread>
-#include <type_traits>
 #include <utility>
 #ifdef __GNUC__
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #endif
-#include <iostream>
 #include <vector>
 
 // a fast forest inference framework for shallow and perfect trees
@@ -24,7 +20,7 @@ namespace qleaf {
 
 namespace detail {
 class FairBalancer {
-public:
+ public:
   void init(size_t num_trees, size_t num_workers) {
     q = num_trees / num_workers;
     r = num_trees % num_workers;
@@ -34,22 +30,30 @@ public:
   }
   size_t len(size_t index) { return index < r ? q + 1 : q; }
 
-private:
+ private:
   size_t q{}, r{};
 };
 
 // branching tool
-template <typename T> inline T to_left(T idx) { return 2 * (idx + 1) - 1; }
-template <typename T> inline T to_right(T idx) { return 2 * (idx + 1); }
+template <typename T>
+inline T to_left(T idx) {
+  return 2 * (idx + 1) - 1;
+}
+template <typename T>
+inline T to_right(T idx) {
+  return 2 * (idx + 1);
+}
 
 // leaf mask tool
-template <typename TMask> consteval auto get_mask_full() {
+template <typename TMask>
+consteval auto get_mask_full() {
   TMask ret;
   ret.set();
   return ret;
 }
 
-template <size_t tMaxDepth> consteval auto get_mask() {
+template <size_t tMaxDepth>
+consteval auto get_mask() {
   constexpr size_t kMaxDepth{tMaxDepth};
   constexpr size_t kMaxTreeSize{(1 << (tMaxDepth + 1)) - 1};
   constexpr size_t kMaxLeaves{1 << kMaxDepth};
@@ -69,7 +73,8 @@ template <size_t tMaxDepth> consteval auto get_mask() {
   return mask;
 }
 
-template <size_t tMaxDepth> size_t leaf_mask_to_index(auto &&mask, auto depth) {
+template <size_t tMaxDepth>
+size_t leaf_mask_to_index(auto &&mask, auto depth) {
   constexpr size_t kMaxDepth{tMaxDepth};
   size_t bit;
   if constexpr (kMaxDepth <= 6) {
@@ -80,7 +85,7 @@ template <size_t tMaxDepth> size_t leaf_mask_to_index(auto &&mask, auto depth) {
   auto leaf = bit >> (kMaxDepth - depth);
   return leaf;
 }
-} // namespace detail
+}  // namespace detail
 
 template <typename TNodeBuffer, typename TValue>
 concept CNodeBuffer =
@@ -95,26 +100,28 @@ concept CNodeBuffer =
       { nodes.reserve(len) } -> std::same_as<void>;
     };
 
-template <typename TValue> struct TreeNode {
+template <typename TValue>
+struct TreeNode {
   using Value = TValue;
   size_t idx;
   Value split;
 };
 
-template <typename TValue> class TreeNodeBuffer {
-public:
+template <typename TValue>
+class TreeNodeBuffer {
+ public:
   using Value = TValue;
   using NodeT = TreeNode<Value>;
   Value split(size_t i) const { return buffer_[i].split; }
   size_t idx(size_t i) const { return buffer_[i].idx; }
   class Span {
-  public:
+   public:
     Span(const NodeT *buffer, size_t len) : buffer_(buffer), size_(len) {}
     Value split(size_t i) const { return buffer_[i].split; }
     size_t idx(size_t i) const { return buffer_[i].idx; }
     size_t size() const { return size_; }
 
-  private:
+   private:
     const NodeT *
 #ifdef __GNUC__
         __restrict__
@@ -133,24 +140,25 @@ public:
 
   void reserve(size_t n) { buffer_.reserve(n); }
 
-private:
+ private:
   std::vector<NodeT> buffer_;
 };
 
-template <typename TValue> class CompactNodeBuffer {
-public:
+template <typename TValue>
+class CompactNodeBuffer {
+ public:
   using Value = TValue;
   Value split(size_t i) const { return splits_[i]; }
   size_t idx(size_t i) const { return indices_[i]; }
   class Span {
-  public:
+   public:
     Span(const Value *splits, const size_t *indices, size_t len)
         : splits_(splits), indices_(indices), size_(len) {}
     Value split(size_t i) const { return splits_[i]; }
     size_t idx(size_t i) const { return indices_[i]; }
     size_t size() const { return size_; }
 
-  private:
+   private:
     const Value *
 #ifdef __GNUC__
         __restrict__
@@ -178,7 +186,7 @@ public:
     indices_.reserve(n);
   }
 
-private:
+ private:
   std::vector<Value> splits_;
   std::vector<size_t> indices_;
 };
@@ -188,7 +196,7 @@ template <typename TValue, template <typename, typename> typename TWorker,
           typename TReducer>
   requires CNodeBuffer<TNodeBuffer<TValue>, TValue>
 class Inferrer {
-public:
+ public:
   using Value = TValue;
   using LoadBalancer = TLoadBalancer;
   using NodeBuffer = TNodeBuffer<Value>;
@@ -230,7 +238,7 @@ public:
     return Reducer{}(std::span<Value>(results_));
   }
 
-private:
+ private:
   std::vector<Worker> workers_;
   NodeBuffer nodes_;
   std::vector<Value> results_;
@@ -238,8 +246,9 @@ private:
   size_t n_trees_;
 };
 
-template <typename TWorker> class ThreadedWorker {
-public:
+template <typename TWorker>
+class ThreadedWorker {
+ public:
   using Worker = TWorker;
   using Value = typename Worker::Value;
 
@@ -285,7 +294,7 @@ public:
     return ret;
   }
 
-private:
+ private:
   std::atomic<const Value *> features_;
   std::atomic<size_t> size_;
   std::atomic<bool> ready_;
@@ -293,13 +302,16 @@ private:
   std::jthread thread_;
 };
 
-template <typename TValue, typename TSpan> class BranchRegressionWorker {
-public:
+template <typename TValue, typename TSpan>
+class BranchRegressionWorker {
+ public:
   using Value = TValue;
   using Span = TSpan;
   constexpr static Value kEps{1e-10};
   BranchRegressionWorker(auto &&config, size_t depth, Span nodes)
-      : nodes_(nodes), depth_(depth), tree_size_((1uz << (depth_ + 1)) - 1),
+      : nodes_(nodes),
+        depth_(depth),
+        tree_size_((1uz << (depth_ + 1)) - 1),
         n_trees_(nodes.size() / tree_size_),
         eps_(config.template get<bool>("has_equal") ? kEps : 0) {
     assert(n_trees_ * tree_size_ == nodes.size());
@@ -328,7 +340,7 @@ public:
 
   Value get() const { return result_; }
 
-private:
+ private:
   const Span nodes_;
   const size_t depth_;
   const size_t tree_size_;
@@ -338,7 +350,8 @@ private:
 };
 
 struct RegressionReducer {
-  template <typename TValue> TValue operator()(std::span<TValue> results) {
+  template <typename TValue>
+  TValue operator()(std::span<TValue> results) {
     return std::ranges::fold_left(results, TValue{}, std::plus<>());
   }
 };
@@ -346,7 +359,7 @@ struct RegressionReducer {
 constexpr static size_t kDefaultMaxDepth{6};
 template <typename TValue, typename TSpan, size_t tMaxDepth = kDefaultMaxDepth>
 class BitmaskRegressionWorker {
-public:
+ public:
   using Value = TValue;
   using Span = TSpan;
   constexpr static size_t kMaxDepth{tMaxDepth};
@@ -357,7 +370,9 @@ public:
   // mask can be precomputed in compile time for perfect trees
   constexpr static auto kMasks = detail::get_mask<kMaxDepth>();
   BitmaskRegressionWorker(auto &&config, size_t depth, Span nodes)
-      : nodes_(nodes), depth_(depth), tree_size_((1uz << (depth_ + 1)) - 1),
+      : nodes_(nodes),
+        depth_(depth),
+        tree_size_((1uz << (depth_ + 1)) - 1),
         n_trees_(nodes.size() / tree_size_),
         eps_(config.template get<bool>("has_equal") ? kEps : 0) {
     assert(n_trees_ * tree_size_ == nodes.size());
@@ -390,7 +405,7 @@ public:
 
   Value get() const { return result_; }
 
-private:
+ private:
   const Span nodes_;
   const size_t depth_;
   const size_t tree_size_;
@@ -398,5 +413,5 @@ private:
   const Value eps_{};
   Value result_{};
 };
-} // namespace qleaf
+}  // namespace qleaf
 #endif

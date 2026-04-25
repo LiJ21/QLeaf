@@ -1,21 +1,24 @@
 #ifndef INCLUDE_CONFIG
 #define INCLUDE_CONFIG
 #include <nlohmann/json.hpp>
-#include <span>
 #include <string_view>
 
 namespace qleaf {
 
 class Config {
-public:
+ public:
   explicit Config(const nlohmann::json &node) : node_(node) {}
 
-  template <typename T> T get(std::string_view key) const {
+  template <typename T>
+  T get(std::string_view key) const {
     return node_.at(key).get<T>();
   }
 
   Config get(std::string_view key) const { return Config{node_.at(key)}; }
-  template <typename T> T get() const { return node_.template get<T>(); }
+  template <typename T>
+  T get() const {
+    return node_.template get<T>();
+  }
   Config operator[](size_t i) const { return Config{node_.at(i)}; }
 
   struct Iterator {
@@ -33,9 +36,9 @@ public:
 
   size_t size() const { return node_.size(); }
 
-private:
+ private:
   const nlohmann::json &node_;
 };
 
-} // namespace qleaf
+}  // namespace qleaf
 #endif
