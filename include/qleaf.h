@@ -8,7 +8,10 @@
 #include <ranges>
 #include <stop_token>
 #include <thread>
+#include <type_traits>
 #include <utility>
+
+#include "config.h"
 #ifdef __GNUC__
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -19,30 +22,48 @@
 namespace qleaf {
 
 namespace detail {
-class FairBalancer {
+struct DummyCompare {};
+struct FeatureDictCompare {
+  bool operator()(const auto &t1, const auto &t2) {
+    auto i1s = t1.get("indices");
+    auto i2s = t2.get("indices");
+    std::sort(i1s.begin(), i1s.end());
+    std::sort(i2s.begin(), i2s.end());
+    for (auto i : std::views::iota(0u, i1s.size())) {
+      if (i >= i2s.size()) return false;
+      if (i1s[i] < i2s[i]) return true;
+      if (i1s[i] > i2s[i]) return false;
+    }
+    if (i1s.size() < i2s.size()) return true;
+    return false;
+  }
+};
+template <typename TCompare>
+class SortedFairBalancer {
  public:
-  void init(size_t num_trees, size_t num_workers) {
-    q = num_trees / num_workers;
-    r = num_trees % num_workers;
+  using Compare = TCompare;
+  SortedFairBalancer(const auto &trees_config, size_t num_workers)
+      : trees_config_(trees_config) {
+    if constexpr (!std::is_same_v<Compare, DummyCompare>) {
+      std::sort(trees_config_.begin(), trees_config_.end(), Compare{});
+    }
+    auto num_trees = trees_config.size();
+    q_ = num_trees / num_workers;
+    r_ = num_trees % num_workers;
   }
   size_t start(size_t index) {
-    return index < r ? index * (q + 1) : r * (q + 1) + (index - r) * q;
+    return index < r_ ? index * (q_ + 1) : r_ * (q_ + 1) + (index - r_) * q_;
   }
-  size_t len(size_t index) { return index < r ? q + 1 : q; }
+  size_t len(size_t index) { return index < r_ ? q_ + 1 : q_; }
+
+  const auto &trees() const { return trees_config_; }
 
  private:
-  size_t q{}, r{};
+  size_t q_{}, r_{};
+  Config trees_config_;
 };
 
-// branching tool
-template <typename T>
-inline T to_left(T idx) {
-  return 2 * (idx + 1) - 1;
-}
-template <typename T>
-inline T to_right(T idx) {
-  return 2 * (idx + 1);
-}
+using FairBalancer = SortedFairBalancer<DummyCompare>;
 
 // leaf mask tool
 template <typename TMask>
@@ -207,7 +228,12 @@ class Inferrer {
     size_t tree_size = (1uz << (depth_ + 1)) - 1;
     n_trees_ = config.get("trees").size();
     nodes_.reserve(n_trees_ * tree_size);
-    for (const auto &tree_config : config.get("trees")) {
+
+    auto config_workers = config.get("worker");
+    auto n_workers = config_workers.size();
+
+    LoadBalancer load_balancer(config.get("trees"), n_workers);
+    for (const auto &tree_config : load_balancer.trees()) {
       const auto &splits = tree_config.get("splits");
       const auto &indices = tree_config.get("indices");
       for (size_t i = 0; i < tree_size; ++i) {
@@ -215,10 +241,6 @@ class Inferrer {
                             splits[i].template get<Value>());
       }
     }
-    LoadBalancer load_balancer;
-    auto config_workers = config.get("worker");
-    auto n_workers = config_workers.size();
-    load_balancer.init(n_trees_, n_workers);
 
     for (auto i : std::views::iota(0uz, n_workers)) {
       workers_.emplace_back(config_workers[i], depth_,
