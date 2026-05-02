@@ -416,7 +416,7 @@ class BitmaskRegressionWorker {
       auto mask = ones;
       for (size_t i = 0; i < internal_num; ++i) {
         size_t idx = base + i;
-        mask &= features[nodes_.idx(idx)] < nodes_.split(idx) + kEps
+        mask &= features[nodes_.idx(idx)] < nodes_.split(idx) + eps_
                     ? ones
                     : kMasks[i];
       }
