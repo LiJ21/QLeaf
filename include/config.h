@@ -20,6 +20,7 @@ class Config {
     return node_.template get<T>();
   }
   Config operator[](size_t i) const { return Config{node_.at(i)}; }
+  bool contains(std::string_view key) const { return node_.contains(key); }
 
   struct Iterator {
     nlohmann::json::const_iterator it;
