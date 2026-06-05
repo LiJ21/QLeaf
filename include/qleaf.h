@@ -16,12 +16,28 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #endif
+#if defined(__linux__)
+#include <pthread.h>
+#include <sched.h>
+#endif
 #include <vector>
 
 // a fast forest inference framework for shallow and perfect trees
 namespace qleaf {
 
 namespace detail {
+// Pin the calling thread to a single logical core. No-op off Linux.
+inline void pin_to_core(int core) {
+#if defined(__linux__)
+  cpu_set_t set;
+  CPU_ZERO(&set);
+  CPU_SET(core, &set);
+  pthread_setaffinity_np(pthread_self(), sizeof(set), &set);
+#else
+  (void)core;
+#endif
+}
+
 struct DummyCompare {};
 struct FeatureDictCompare {
   bool operator()(const auto &t1, const auto &t2) {
@@ -281,7 +297,10 @@ class ThreadedWorker {
     size_.store(0, std::memory_order_relaxed);
     ready_.store(false, std::memory_order_relaxed);
 
-    auto do_work = [this](std::stop_token st) {
+    int core = config.contains("core") ? config.template get<int>("core") : -1;
+
+    auto do_work = [this, core](std::stop_token st) {
+      if (core >= 0) detail::pin_to_core(core);
       while (!st.stop_requested()) {
         const Value *features{};
         if ((features = this->features_.load(std::memory_order_acquire))) {
