@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.24)
-project(qleaf_tests CXX)
+project(qleaf_tests CXX CUDA)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# nvcc 12.0 caps device code at C++20 (host stays C++23 above).
+set(CMAKE_CUDA_STANDARD 20)
+set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+set(CMAKE_CUDA_ARCHITECTURES native)
 
 include(FetchContent)
 
@@ -14,11 +19,20 @@ FetchContent_Declare(nlohmann_json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
     GIT_TAG        v3.11.3)
 
-FetchContent_MakeAvailable(googletest nlohmann_json)
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(googlebenchmark
+    GIT_REPOSITORY https://github.com/google/benchmark.git
+    GIT_TAG        v1.8.3)
+
+FetchContent_MakeAvailable(googletest nlohmann_json googlebenchmark)
 
 add_library(qleaf INTERFACE)
 target_include_directories(qleaf INTERFACE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(qleaf INTERFACE nlohmann_json::nlohmann_json)
+
+add_executable(worker_bench bench/worker.cc)
+target_link_libraries(worker_bench PRIVATE qleaf benchmark::benchmark)
 
 file(GLOB_RECURSE qleaf_TEST_SOURCES CONFIGURE_DEPENDS test/*.cc)
 
