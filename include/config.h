@@ -1,5 +1,8 @@
 #ifndef INCLUDE_CONFIG
 #define INCLUDE_CONFIG
+#if defined(__CUDACC__) && !defined(JSON_HAS_RANGES)
+#define JSON_HAS_RANGES 0
+#endif
 #include <nlohmann/json.hpp>
 #include <string_view>
 

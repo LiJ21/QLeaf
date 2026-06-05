@@ -1,0 +1,8 @@
+{
+  "root": "/home/jli/projects/qleaf/bench/results/latency/ablation_hdr_100k_2026_06_19",
+  "summary_json": 16,
+  "hdr": 174,
+  "ok": 174,
+  "skipped": 18,
+  "failed_or_other": 0
+}

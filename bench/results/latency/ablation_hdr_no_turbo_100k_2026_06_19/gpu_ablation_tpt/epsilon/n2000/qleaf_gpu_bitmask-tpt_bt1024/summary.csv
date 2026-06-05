@@ -1,0 +1,13 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1/tpt:1/nodestride:1",ok,100000,27519,28015,28319,30383,27591.8,53023,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:1/nodestride:1",ok,100000,27567,27935,28351,29679,27608,48543,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1/tpt:2/nodestride:1",ok,100000,12927,13391,13655,15327,12960.2,30719,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:2/nodestride:1",ok,100000,12175,12383,12863,14663,12200.6,35999,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1/tpt:4/nodestride:1",ok,100000,10487,10975,11287,13415,10549.4,31855,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4/nodestride:1",ok,100000,9599,9847,10423,12279,9627.75,29455,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1/tpt:8/nodestride:1",ok,100000,9663,10279,10711,13007,9813.84,41023,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8/nodestride:1",ok,100000,8863,10927,11279,12279,9556.96,28415,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1/tpt:16/nodestride:1",skipped,0,0,0,0,0,0,0,"persistent grid not co-resident"
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16/nodestride:1",skipped,0,0,0,0,0,0,0,"persistent grid not co-resident"
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1/tpt:32/nodestride:1",skipped,0,0,0,0,0,0,0,"persistent grid not co-resident"
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:32/nodestride:1",skipped,0,0,0,0,0,0,0,"persistent grid not co-resident"

@@ -1,0 +1,6 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:0/crossreduce:0/sp:0/stage:0/seqflag:0",ok,100000,22863,23855,26767,30015,22939,77055,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:0/crossreduce:0/sp:0/stage:0/seqflag:0/tpt:1/nodestride:1",ok,100000,34847,36319,38719,41695,34948,115391,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:0/crossreduce:0/sp:0/stage:0/seqflag:0/tpt:4/nodestride:1",ok,100000,57727,65407,72639,78527,57986.4,97983,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:0/crossreduce:0/sp:0/stage:0/seqflag:0/tpt:8/nodestride:1",ok,100000,67519,74879,81663,87359,67694.6,127231,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:0/crossreduce:0/sp:0/stage:0/seqflag:0/tpt:16/nodestride:1",skipped,0,0,0,0,0,0,0,"persistent grid not co-resident"

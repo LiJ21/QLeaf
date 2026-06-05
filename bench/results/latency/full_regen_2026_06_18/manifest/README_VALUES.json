@@ -1,0 +1,6 @@
+{
+  "root": "/home/jli/projects/qleaf/bench/results/latency/full_regen_2026_06_18",
+  "summary_json": 230,
+  "worker_bench_cuda_json": 24,
+  "hdr": 2328
+}

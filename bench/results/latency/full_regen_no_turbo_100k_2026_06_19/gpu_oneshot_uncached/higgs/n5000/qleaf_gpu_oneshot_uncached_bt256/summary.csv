@@ -1,0 +1,3 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+"qleaf/gpu/oneshot/compact/bt:256/transposed:1/bitmask:1/cached:0/mapped:0/tpt:4/nodestride:4",ok,100000,35423,36159,40255,42463,35609.8,86591,""
+"qleaf/gpu/oneshot/compact/bt:256/transposed:0/bitmask:1/cached:0/mapped:0/tpt:4/nodestride:4",ok,100000,40415,41183,45567,47871,40641.8,89215,""

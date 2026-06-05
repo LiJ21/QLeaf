@@ -1,0 +1,7 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+nvforest/cpu/threads:16/layout:depth_first/chunk_size:64/align_bytes:0,ok,20000,29791,32351,44255,63327,30151.4,712191,
+nvforest/cpu/threads:16/layout:depth_first/chunk_size:64/align_bytes:64,ok,20000,30015,32511,42879,56159,30197.7,283647,
+nvforest/cpu/threads:16/layout:layered/chunk_size:64/align_bytes:0,ok,20000,29503,32367,46623,59711,30133.5,2041855,
+nvforest/cpu/threads:16/layout:layered/chunk_size:64/align_bytes:64,ok,20000,29423,31919,42399,55807,29649.3,361727,
+nvforest/cpu/threads:16/layout:breadth_first/chunk_size:64/align_bytes:0,ok,20000,29663,36991,48479,64127,30953,1725439,
+nvforest/cpu/threads:16/layout:breadth_first/chunk_size:64/align_bytes:64,ok,20000,38079,45599,61855,864255,39915.8,5451775,

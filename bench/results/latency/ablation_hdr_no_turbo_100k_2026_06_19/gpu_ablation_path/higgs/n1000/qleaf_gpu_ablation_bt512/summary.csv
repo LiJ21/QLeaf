@@ -1,0 +1,13 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+"qleaf/gpu/oneshot/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1",ok,100000,9167,9567,9879,11847,9231.54,43071,""
+"qleaf/gpu/oneshot/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/tpt:1/nodestride:1",ok,100000,12335,12823,13327,15255,12418.7,34335,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:0/crossreduce:1",ok,100000,8143,8487,9087,10967,8191.3,24735,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:0/crossreduce:1/tpt:1/nodestride:1",ok,100000,12271,12679,13095,15151,12295.3,30927,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:1",ok,100000,6323,6767,7211,8199,6327.61,22687,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:1/tpt:1/nodestride:1",ok,100000,10775,11191,11711,12447,10798,33279,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0",ok,100000,4799,5015,5411,6591,4835.82,15639,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/tpt:1/nodestride:1",ok,100000,9087,9423,9951,10903,9101.35,37919,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1",ok,100000,5303,5587,5847,6791,5215.62,29167,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0",ok,100000,4291,4563,5011,5859,4337.89,19103,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1/tpt:1/nodestride:1",ok,100000,9271,9511,9799,11223,9299.35,26319,""
+"qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:1/nodestride:1",ok,100000,9503,9647,10023,11063,9531.83,27375,""

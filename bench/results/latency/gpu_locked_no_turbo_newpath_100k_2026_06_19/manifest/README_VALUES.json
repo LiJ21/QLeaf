@@ -1,0 +1,11 @@
+{
+  "root": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19",
+  "summary_json": 94,
+  "worker_bench_cuda_json": 24,
+  "hdr": 2136,
+  "percentiles_csv": 2280,
+  "statuses": {
+    "skipped": 2632,
+    "ok": 2268
+  }
+}

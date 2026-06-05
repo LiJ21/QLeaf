@@ -1,0 +1,13 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+"qleaf/gpu/oneshot/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1",ok,100000,11711,11919,12479,14455,11749.7,34111,""
+"qleaf/gpu/oneshot/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/tpt:1/nodestride:1",ok,100000,18159,18527,18847,20831,18197.6,29183,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:0/crossreduce:1",ok,100000,9943,10471,11479,14375,10114.5,32527,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:0/crossreduce:1/tpt:1/nodestride:1",ok,100000,27471,27855,28799,31023,27477.5,53151,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:1",ok,100000,10687,11247,11783,13615,10727.7,30015,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:1/tpt:1/nodestride:1",ok,100000,27935,28447,28911,30623,28005.5,46591,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0",ok,100000,9351,9767,10239,12407,9358.78,32655,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/tpt:1/nodestride:1",ok,100000,26383,26799,27279,29135,26435.7,41215,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1",ok,100000,9431,9895,10359,12335,9515.25,27471,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0",ok,100000,9359,9535,10239,11751,9391.67,34847,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1/tpt:1/nodestride:1",ok,100000,26799,27183,27503,29695,26845.3,55167,""
+"qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:1/nodestride:1",ok,100000,26799,27167,27487,28895,26843.9,42431,""

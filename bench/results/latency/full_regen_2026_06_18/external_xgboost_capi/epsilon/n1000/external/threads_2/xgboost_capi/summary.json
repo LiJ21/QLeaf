@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "engines": [
+      "xgboost"
+    ],
+    "features": 2000,
+    "histogram": "HdrHistogram_c",
+    "iters": 20000,
+    "ntrees": 1000,
+    "nvforest_cpu_chunk_sizes": [
+      64
+    ],
+    "nvforest_devices": [
+      "gpu",
+      "cpu"
+    ],
+    "samples": 1024,
+    "threads": 2,
+    "warmup": 2000
+  },
+  "runs": [
+    {
+      "boosted_rounds": 5000,
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "elapsed_ns": 2689455116,
+      "engine": "xgboost_capi",
+      "features": 2000,
+      "histogram": "HdrHistogram_c",
+      "iteration_begin": 0,
+      "iteration_end": 1000,
+      "iters": 20000,
+      "last_result": 12.734692573547363,
+      "latency": {
+        "count": 20000,
+        "dropped": 0,
+        "max_ns": 418303,
+        "mean_ns": 134396.304,
+        "min_ns": 126080,
+        "p50_ns": 132095,
+        "p90_ns": 138879,
+        "p95_ns": 143615,
+        "p99_90_ns": 283391,
+        "p99_99_ns": 375807,
+        "p99_ns": 180607,
+        "stddev_ns": 11055.6313112361
+      },
+      "model_file": "bench/results/latency/final_2026_06/inputs/bench/data/epsilon_d6_n5000.xgb.json",
+      "name": "xgboost/capi/threads:2/output:margin",
+      "ntrees": 1000,
+      "num_feature": 2000,
+      "output": "margin",
+      "percentiles_csv": "bench/results/latency/full_regen_2026_06_18/external_xgboost_capi/epsilon/n1000/external/threads_2/xgboost_capi/xgboost_capi_threads_2_output_margin.percentiles.csv",
+      "predict_api": "XGBoosterPredictFromDense",
+      "predict_type": 1,
+      "samples": 1024,
+      "status": "ok",
+      "threads": 2,
+      "warmup": 2000,
+      "xgboost_runtime": ".venv/lib/python3.12/site-packages/xgboost/lib/libxgboost.so",
+      "xgboost_version": "3.2.0"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "meta": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "engines": [
+      "treelite"
+    ],
+    "features": 28,
+    "histogram": "HdrHistogram_c",
+    "iters": 100000,
+    "ntrees": 5000,
+    "nvforest_cpu_chunk_sizes": [
+      64
+    ],
+    "nvforest_devices": [
+      "gpu",
+      "cpu"
+    ],
+    "samples": 1024,
+    "threads": 4,
+    "warmup": 10000
+  },
+  "runs": [
+    {
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "compiled_lib": "bench/results/latency/full_regen_no_turbo_100k_2026_06_19/external_models/higgs/n5000/tl2cgen_n5000.so",
+      "elapsed_ns": 64571023618,
+      "engine": "treelite_tl2cgen_capi",
+      "features": 28,
+      "histogram": "HdrHistogram_c",
+      "iters": 100000,
+      "last_result": -5.533319473266602,
+      "latency": {
+        "count": 100000,
+        "dropped": 0,
+        "max_ns": 846847,
+        "mean_ns": 644999.48544,
+        "min_ns": 461312,
+        "p50_ns": 649727,
+        "p90_ns": 701951,
+        "p95_ns": 712191,
+        "p99_90_ns": 748031,
+        "p99_99_ns": 797183,
+        "p99_ns": 730623,
+        "stddev_ns": 46332.73074700464
+      },
+      "leaf_output_type": "float32",
+      "name": "treelite/tl2cgen-capi/threads:4/output:margin",
+      "ntrees": 5000,
+      "num_class": [
+        1
+      ],
+      "num_target": 1,
+      "output_shape": [
+        1,
+        1,
+        1
+      ],
+      "percentiles_csv": "bench/results/latency/full_regen_no_turbo_100k_2026_06_19/external_cpu/higgs/n5000/external/threads_4/tl2cgen_capi/treelite_tl2cgen-capi_threads_4_output_margin.percentiles.csv",
+      "samples": 1024,
+      "status": "ok",
+      "threads": 4,
+      "tl2cgen_runtime": ".venv/lib/python3.12/site-packages/tl2cgen/lib/libtl2cgen.so",
+      "warmup": 10000
+    }
+  ]
+}

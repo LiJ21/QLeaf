@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "compiled_bt": 256,
+    "depth": 6,
+    "features": 28,
+    "features_csv": "bench/results/latency/final_2026_06/inputs/bench/data/higgs_d6_n5000.feats.csv",
+    "gpu_suite": "oneshot",
+    "histogram": "HdrHistogram_c",
+    "iters": 20000,
+    "ntrees": 2000,
+    "pin_cores": [
+      16
+    ],
+    "samples": 1024,
+    "trees": "bench/results/latency/final_2026_06/inputs/bench/data/higgs_d6_n5000.qleaf.json",
+    "warmup": 2000
+  },
+  "runs": [
+    {
+      "bt": 256,
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "depth": 6,
+      "engine": "qleaf_gpu",
+      "features": 28,
+      "hdr_log": "bench/results/latency/full_regen_2026_06_18/gpu_oneshot_uncached/higgs/n2000/qleaf_gpu_oneshot_uncached_bt256/qleaf_gpu_oneshot_compact_bt_256_transposed_1_bitmask_1_cached_0_mapped_0_tpt_4_nodestride_4.hdr",
+      "histogram": "HdrHistogram_c",
+      "iters": 20000,
+      "last_result": 2.136718511581421,
+      "latency": {
+        "count": 20000,
+        "dropped": 0,
+        "max_ns": 454143,
+        "mean_ns": 18324.2944,
+        "min_ns": 16656,
+        "p50_ns": 17455,
+        "p90_ns": 18095,
+        "p95_ns": 18655,
+        "p99_90_ns": 312575,
+        "p99_99_ns": 443647,
+        "p99_ns": 21423,
+        "stddev_ns": 15203.618135790199
+      },
+      "name": "qleaf/gpu/oneshot/compact/bt:256/transposed:1/bitmask:1/cached:0/mapped:0/tpt:4/nodestride:4",
+      "ntrees": 2000,
+      "percentiles_csv": "bench/results/latency/full_regen_2026_06_18/gpu_oneshot_uncached/higgs/n2000/qleaf_gpu_oneshot_uncached_bt256/qleaf_gpu_oneshot_compact_bt_256_transposed_1_bitmask_1_cached_0_mapped_0_tpt_4_nodestride_4.percentiles.csv",
+      "samples": 1024,
+      "status": "ok",
+      "warmup": 2000
+    },
+    {
+      "bt": 256,
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "depth": 6,
+      "engine": "qleaf_gpu",
+      "features": 28,
+      "hdr_log": "bench/results/latency/full_regen_2026_06_18/gpu_oneshot_uncached/higgs/n2000/qleaf_gpu_oneshot_uncached_bt256/qleaf_gpu_oneshot_compact_bt_256_transposed_0_bitmask_1_cached_0_mapped_0_tpt_4_nodestride_4.hdr",
+      "histogram": "HdrHistogram_c",
+      "iters": 20000,
+      "last_result": 2.136718511581421,
+      "latency": {
+        "count": 20000,
+        "dropped": 0,
+        "max_ns": 360191,
+        "mean_ns": 19550.8732,
+        "min_ns": 17488,
+        "p50_ns": 18383,
+        "p90_ns": 19167,
+        "p95_ns": 20783,
+        "p99_90_ns": 294911,
+        "p99_99_ns": 325375,
+        "p99_ns": 23199,
+        "stddev_ns": 15257.064088766283
+      },
+      "name": "qleaf/gpu/oneshot/compact/bt:256/transposed:0/bitmask:1/cached:0/mapped:0/tpt:4/nodestride:4",
+      "ntrees": 2000,
+      "percentiles_csv": "bench/results/latency/full_regen_2026_06_18/gpu_oneshot_uncached/higgs/n2000/qleaf_gpu_oneshot_uncached_bt256/qleaf_gpu_oneshot_compact_bt_256_transposed_0_bitmask_1_cached_0_mapped_0_tpt_4_nodestride_4.percentiles.csv",
+      "samples": 1024,
+      "status": "ok",
+      "warmup": 2000
+    }
+  ]
+}

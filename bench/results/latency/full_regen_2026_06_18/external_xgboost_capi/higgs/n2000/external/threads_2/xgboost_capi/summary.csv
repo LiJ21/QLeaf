@@ -1,0 +1,2 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+xgboost/capi/threads:2/output:margin,ok,20000,250367,277247,368639,722943,259259,4057087,
