@@ -7,7 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # nvcc 12.0 caps device code at C++20 (host stays C++23 above).
 set(CMAKE_CUDA_STANDARD 20)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
-set(CMAKE_CUDA_ARCHITECTURES native)
+# cuda::atomic requires sm_60+ on Linux; users can still override this at
+# configure time with -DCMAKE_CUDA_ARCHITECTURES=...
+set(CMAKE_CUDA_ARCHITECTURES 60)
 
 include(FetchContent)
 
@@ -31,6 +33,7 @@ add_library(qleaf INTERFACE)
 target_include_directories(qleaf INTERFACE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(qleaf INTERFACE nlohmann_json::nlohmann_json)
 
+set_source_files_properties(bench/worker.cc PROPERTIES LANGUAGE CUDA)
 add_executable(worker_bench bench/worker.cc)
 target_link_libraries(worker_bench PRIVATE qleaf benchmark::benchmark)
 

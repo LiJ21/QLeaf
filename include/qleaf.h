@@ -1,11 +1,15 @@
 #ifndef INCLUDE_QLEAF
 #define INCLUDE_QLEAF
 #include <algorithm>
+#include <array>
 #include <atomic>
+#include <bit>
 #include <bitset>
 #include <cassert>
 #include <concepts>
+#include <functional>
 #include <ranges>
+#include <span>
 #include <stop_token>
 #include <thread>
 #include <type_traits>
@@ -82,26 +86,32 @@ class SortedFairBalancer {
 using FairBalancer = SortedFairBalancer<DummyCompare>;
 
 // leaf mask tool
+#if defined(__CUDACC__)
+#define QLEAF_MASK_EVAL
+#else
+#define QLEAF_MASK_EVAL consteval
+#endif
+
 template <typename TMask>
-consteval auto get_mask_full() {
+QLEAF_MASK_EVAL auto get_mask_full() {
   TMask ret;
   ret.set();
   return ret;
 }
 
 template <size_t tMaxDepth>
-consteval auto get_mask() {
+QLEAF_MASK_EVAL auto get_mask() {
   constexpr size_t kMaxDepth{tMaxDepth};
   constexpr size_t kMaxTreeSize{(1 << (tMaxDepth + 1)) - 1};
   constexpr size_t kMaxLeaves{1 << kMaxDepth};
   using Mask = std::bitset<kMaxLeaves>;
   std::array<Mask, kMaxTreeSize - kMaxLeaves> mask;
   auto mask_full = get_mask_full<Mask>();
-  size_t num_per_level = 1uz;
+  size_t num_per_level = size_t{1};
   size_t idx = 0;
   for (size_t d = 0; d < kMaxDepth; ++d, num_per_level <<= 1) {
     for (size_t i = 0; i < num_per_level; ++i) {
-      auto sub_size = 1uz << (kMaxDepth - d);
+      auto sub_size = size_t{1} << (kMaxDepth - d);
       auto len = sub_size >> 1;
       auto start = sub_size * i;
       mask[idx++] = ~((mask_full >> (kMaxLeaves - len)) << start);
@@ -109,6 +119,8 @@ consteval auto get_mask() {
   }
   return mask;
 }
+
+#undef QLEAF_MASK_EVAL
 
 template <size_t tMaxDepth>
 size_t leaf_mask_to_index(auto &&mask, auto depth) {
@@ -140,6 +152,8 @@ concept CNodeBuffer =
 template <typename TValue>
 struct TreeNode {
   using Value = TValue;
+  TreeNode(size_t node_idx, Value split_value)
+      : idx(node_idx), split(split_value) {}
   size_t idx;
   Value split;
 };
@@ -241,7 +255,7 @@ class Inferrer {
   using Reducer = TReducer;
   Inferrer(auto &&config) {
     depth_ = config.template get<size_t>("depth");
-    size_t tree_size = (1uz << (depth_ + 1)) - 1;
+    size_t tree_size = (size_t{1} << (depth_ + 1)) - 1;
     n_trees_ = config.get("trees").size();
     nodes_.reserve(n_trees_ * tree_size);
 
@@ -258,7 +272,9 @@ class Inferrer {
       }
     }
 
-    for (auto i : std::views::iota(0uz, n_workers)) {
+    workers_.reserve(n_workers);
+
+    for (auto i : std::views::iota(size_t{0}, n_workers)) {
       workers_.emplace_back(config_workers[i], depth_,
                             nodes_.span(load_balancer.start(i) * tree_size,
                                         load_balancer.len(i) * tree_size));
@@ -270,7 +286,7 @@ class Inferrer {
     for (auto &w : workers_) {
       w.predict(features);
     }
-    for (auto i : std::views::iota(0uz, workers_.size())) {
+    for (auto i : std::views::iota(size_t{0}, workers_.size())) {
       results_[i] = workers_[i].get();
     }
     return Reducer{}(std::span<Value>(results_));
@@ -352,7 +368,7 @@ class BranchRegressionWorker {
   BranchRegressionWorker(auto &&config, size_t depth, Span nodes)
       : nodes_(nodes),
         depth_(depth),
-        tree_size_((1uz << (depth_ + 1)) - 1),
+        tree_size_((size_t{1} << (depth_ + 1)) - 1),
         n_trees_(nodes.size() / tree_size_),
         eps_(config.template get<bool>("has_equal") ? kEps : 0) {
     assert(n_trees_ * tree_size_ == nodes.size());
@@ -393,7 +409,9 @@ class BranchRegressionWorker {
 struct RegressionReducer {
   template <typename TValue>
   TValue operator()(std::span<TValue> results) {
-    return std::ranges::fold_left(results, TValue{}, std::plus<>());
+    TValue ret{};
+    for (auto value : results) ret += value;
+    return ret;
   }
 };
 
@@ -409,11 +427,13 @@ class BitmaskRegressionWorker {
   using Mask = std::bitset<kMaxLeaves>;
   constexpr static Value kEps{1e-10};
   // mask can be precomputed in compile time for perfect trees
+#if !defined(__CUDACC__)
   constexpr static auto kMasks = detail::get_mask<kMaxDepth>();
+#endif
   BitmaskRegressionWorker(auto &&config, size_t depth, Span nodes)
       : nodes_(nodes),
         depth_(depth),
-        tree_size_((1uz << (depth_ + 1)) - 1),
+        tree_size_((size_t{1} << (depth_ + 1)) - 1),
         n_trees_(nodes.size() / tree_size_),
         eps_(config.template get<bool>("has_equal") ? kEps : 0) {
     assert(n_trees_ * tree_size_ == nodes.size());
@@ -431,13 +451,14 @@ class BitmaskRegressionWorker {
 
     auto internal_num = tree_size_ - (1 << depth_);
     auto ones = detail::get_mask_full<Mask>();
+    const auto &masks = get_masks();
     for (size_t base = 0; base < nnodes; base += tree_size_) {
       auto mask = ones;
       for (size_t i = 0; i < internal_num; ++i) {
         size_t idx = base + i;
         mask &= features[nodes_.idx(idx)] < nodes_.split(idx) + eps_
                     ? ones
-                    : kMasks[i];
+                    : masks[i];
       }
       auto leaf_idx = detail::leaf_mask_to_index<kMaxDepth>(mask, depth_);
       result_ += nodes_.split(base + internal_num + leaf_idx);
@@ -453,6 +474,15 @@ class BitmaskRegressionWorker {
   const size_t n_trees_;
   const Value eps_{};
   Value result_{};
+
+  static const auto &get_masks() {
+#if defined(__CUDACC__)
+    static const auto masks = detail::get_mask<kMaxDepth>();
+    return masks;
+#else
+    return kMasks;
+#endif
+  }
 };
 }  // namespace qleaf
 #endif
