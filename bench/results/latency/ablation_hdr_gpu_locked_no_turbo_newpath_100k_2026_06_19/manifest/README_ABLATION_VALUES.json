@@ -1,0 +1,10 @@
+{
+  "root": "bench/results/latency/ablation_hdr_gpu_locked_no_turbo_newpath_100k_2026_06_19",
+  "summary_json": 16,
+  "hdr": 222,
+  "percentiles_csv": 222,
+  "statuses": {
+    "ok": 222,
+    "skipped": 18
+  }
+}

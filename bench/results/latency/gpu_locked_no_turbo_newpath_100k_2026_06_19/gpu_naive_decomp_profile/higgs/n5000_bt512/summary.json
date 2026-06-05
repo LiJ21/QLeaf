@@ -1,0 +1,159 @@
+{
+  "meta": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "compiled_bt": 512,
+    "depth": 6,
+    "features": 28,
+    "features_csv": "bench/results/latency/ablation_hdr_2026_06_19/inputs/bench/data/higgs_d6_n5000.feats.csv",
+    "gpu_suite": "naive",
+    "histogram": "HdrHistogram_c",
+    "iters": 100000,
+    "ntrees": 5000,
+    "pin_cores": [
+      0
+    ],
+    "samples": 1024,
+    "trees": "bench/results/latency/ablation_hdr_2026_06_19/inputs/bench/data/higgs_d6_n5000.qleaf.json",
+    "warmup": 10000
+  },
+  "runs": [
+    {
+      "bt": 512,
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "depth": 6,
+      "engine": "qleaf_gpu",
+      "features": 28,
+      "hdr_log": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_0_cached_0_mapped_0_crossreduce_1.hdr",
+      "histogram": "HdrHistogram_c",
+      "iters": 100000,
+      "last_result": -5.1777424812316895,
+      "latency": {
+        "count": 100000,
+        "dropped": 0,
+        "max_ns": 43103,
+        "mean_ns": 21478.39164,
+        "min_ns": 13216,
+        "p50_ns": 21583,
+        "p90_ns": 23135,
+        "p95_ns": 23631,
+        "p99_90_ns": 26847,
+        "p99_99_ns": 32399,
+        "p99_ns": 24735,
+        "stddev_ns": 1423.195111703982
+      },
+      "name": "qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:0/crossreduce:1",
+      "ntrees": 5000,
+      "percentiles_csv": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_0_cached_0_mapped_0_crossreduce_1.percentiles.csv",
+      "phases": {
+        "input_load_ns": {
+          "hdr_log": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_0_cached_0_mapped_0_crossreduce_1.input_load_ns.hdr",
+          "latency": {
+            "count": 100000,
+            "dropped": 0,
+            "max_ns": 1,
+            "mean_ns": 1.0,
+            "min_ns": 1,
+            "p50_ns": 1,
+            "p90_ns": 1,
+            "p95_ns": 1,
+            "p99_90_ns": 1,
+            "p99_99_ns": 1,
+            "p99_ns": 1,
+            "stddev_ns": 0.0
+          },
+          "percentiles_csv": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_0_cached_0_mapped_0_crossreduce_1.input_load_ns.percentiles.csv"
+        },
+        "predict_ns": {
+          "hdr_log": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_0_cached_0_mapped_0_crossreduce_1.predict_ns.hdr",
+          "latency": {
+            "count": 100000,
+            "dropped": 0,
+            "max_ns": 43039,
+            "mean_ns": 21423.18996,
+            "min_ns": 13168,
+            "p50_ns": 21535,
+            "p90_ns": 23071,
+            "p95_ns": 23583,
+            "p99_90_ns": 26799,
+            "p99_99_ns": 32351,
+            "p99_ns": 24671,
+            "stddev_ns": 1422.9940115106594
+          },
+          "percentiles_csv": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_0_cached_0_mapped_0_crossreduce_1.predict_ns.percentiles.csv"
+        }
+      },
+      "samples": 1024,
+      "status": "ok",
+      "warmup": 10000
+    },
+    {
+      "bt": 512,
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "depth": 6,
+      "engine": "qleaf_gpu",
+      "features": 28,
+      "hdr_log": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_1_cached_0_mapped_0_crossreduce_1_tpt_1_nodestride_1.hdr",
+      "histogram": "HdrHistogram_c",
+      "iters": 100000,
+      "last_result": -5.533322334289551,
+      "latency": {
+        "count": 100000,
+        "dropped": 0,
+        "max_ns": 41375,
+        "mean_ns": 26854.33048,
+        "min_ns": 25296,
+        "p50_ns": 26735,
+        "p90_ns": 27487,
+        "p95_ns": 28207,
+        "p99_90_ns": 33631,
+        "p99_99_ns": 35999,
+        "p99_ns": 30383,
+        "stddev_ns": 848.2731959357016
+      },
+      "name": "qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:0/crossreduce:1/tpt:1/nodestride:1",
+      "ntrees": 5000,
+      "percentiles_csv": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_1_cached_0_mapped_0_crossreduce_1_tpt_1_nodestride_1.percentiles.csv",
+      "phases": {
+        "input_load_ns": {
+          "hdr_log": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_1_cached_0_mapped_0_crossreduce_1_tpt_1_nodestride_1.input_load_ns.hdr",
+          "latency": {
+            "count": 100000,
+            "dropped": 0,
+            "max_ns": 1,
+            "mean_ns": 1.0,
+            "min_ns": 1,
+            "p50_ns": 1,
+            "p90_ns": 1,
+            "p95_ns": 1,
+            "p99_90_ns": 1,
+            "p99_99_ns": 1,
+            "p99_ns": 1,
+            "stddev_ns": 0.0
+          },
+          "percentiles_csv": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_1_cached_0_mapped_0_crossreduce_1_tpt_1_nodestride_1.input_load_ns.percentiles.csv"
+        },
+        "predict_ns": {
+          "hdr_log": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_1_cached_0_mapped_0_crossreduce_1_tpt_1_nodestride_1.predict_ns.hdr",
+          "latency": {
+            "count": 100000,
+            "dropped": 0,
+            "max_ns": 41311,
+            "mean_ns": 26799.05104,
+            "min_ns": 25248,
+            "p50_ns": 26687,
+            "p90_ns": 27423,
+            "p95_ns": 28159,
+            "p99_90_ns": 33599,
+            "p99_99_ns": 35935,
+            "p99_ns": 30335,
+            "stddev_ns": 847.8321437377319
+          },
+          "percentiles_csv": "bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_naive_decomp_profile/higgs/n5000_bt512/qleaf_gpu_persistent_compact_bt_512_transposed_1_bitmask_1_cached_0_mapped_0_crossreduce_1_tpt_1_nodestride_1.predict_ns.percentiles.csv"
+        }
+      },
+      "samples": 1024,
+      "status": "ok",
+      "warmup": 10000
+    }
+  ]
+}

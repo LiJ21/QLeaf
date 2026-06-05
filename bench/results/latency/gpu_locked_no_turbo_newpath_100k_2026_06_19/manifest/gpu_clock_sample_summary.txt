@@ -1,0 +1,14 @@
+samples=32922
+pstate_P2=32533
+pstate_P0=389
+sm_mhz_min=1800
+sm_mhz_max=1800
+mem_mhz_min=7301
+mem_mhz_max=7501
+max_temp_c=67
+max_power_w=120.48
+max_gpu_util_pct=100
+p0_samples=389
+p0_sm_mhz_1800=389
+p0_mem_mhz_7301=7
+p0_mem_mhz_7501=382
