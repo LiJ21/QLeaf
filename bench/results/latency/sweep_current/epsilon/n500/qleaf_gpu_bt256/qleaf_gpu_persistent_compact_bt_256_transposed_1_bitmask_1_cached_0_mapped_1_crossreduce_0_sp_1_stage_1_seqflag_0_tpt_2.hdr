@@ -1,0 +1,6 @@
+#[# qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:2
+]
+#[Histogram log format version 1.2]
+#[StartTime: 0.000 (seconds since epoch), Thu Jan 00:00:00 GMT 1970]
+"StartTimestamp","EndTimestamp","Interval_Max","Interval_Compressed_Histogram"
+0.000,0.034,444671.0,HISTFAAAAW54nC1RvW4UMRC++XbW57OczbLxmY0xh2WdTpFCEUEFTRQhhIREDQ0FBc9AjYTEA1BR8hQ8QAoqHiLiBSJRQEc+X7Dl+flmPJ5vnD99OVos5HJxu7r/WngO/r54szi/vgWuXqLDXVzgCQR3IEYgKoACtrPGqlEjlM6Pg5viYKfJbdxUchjGGtMUiBWzezjXmjYp70JIeTvXEuc5x80YfCql7EKuJ6XWmrcln81PT7bbvKn10ZRSLnMYY5rzlFgzBZ/9MM4xuMjnhjjyVWdGNwzej94P3MbGOBnHjtSBwlgrRq017JSodY4QjKJTsHtALNmoiidDUiOm5EhHsGQYTOwtmQM9L7WkvvFv1n61aZh2c0mnzUb2Ub1HsUSPFfVRq7ii06pyoK18c7HWpco+cYU1jjlqvKb5TfBH8J7WR8FnwQGtY+ABDnGf2Yf8ijX1Y/wG3uIVPuCd/hSc4lfR773+MPja4Rme45/iBivaJAs=

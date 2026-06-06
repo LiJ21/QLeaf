@@ -1,0 +1,13 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+"qleaf/cpu/compact/branch/nothread",ok,20000,19199,21039,27743,35455,19715.8,43263,""
+"qleaf/cpu/compact/bitmask/nothread",ok,20000,319743,334079,354303,363007,311851,375295,""
+"qleaf/cpu/compact/branch/threads:1",ok,20000,26543,31519,33759,37439,27875.4,67583,""
+"qleaf/cpu/compact/bitmask/threads:1",ok,20000,231167,243839,252927,261247,224304,290815,""
+"qleaf/cpu/compact/branch/threads:2",ok,20000,8311,8719,10487,12199,8401.31,25663,""
+"qleaf/cpu/compact/bitmask/threads:2",ok,20000,162687,169215,175871,181503,160165,200959,""
+"qleaf/cpu/compact/branch/threads:4",ok,20000,4081,4171,5123,7227,4115.12,41215,""
+"qleaf/cpu/compact/bitmask/threads:4",ok,20000,79935,82879,85375,89919,78750,102079,""
+"qleaf/cpu/compact/branch/threads:8",ok,20000,2403,2631,3035,5423,2422.59,21183,""
+"qleaf/cpu/compact/bitmask/threads:8",ok,20000,38303,39711,41279,44799,37641,115519,""
+"qleaf/cpu/compact/branch/threads:16",ok,20000,1769,1977,2151,4335,1750.96,21983,""
+"qleaf/cpu/compact/bitmask/threads:16",ok,20000,20095,20575,21967,23551,19822,85631,""

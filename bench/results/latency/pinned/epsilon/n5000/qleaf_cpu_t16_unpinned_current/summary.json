@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "compiled_bt": 256,
+    "depth": 6,
+    "features": 2000,
+    "features_csv": "py/epsilon_d6_n5000.feats.csv",
+    "gpu_suite": "best",
+    "histogram": "HdrHistogram_c",
+    "iters": 20000,
+    "ntrees": 5000,
+    "pin_cores": [],
+    "samples": 1024,
+    "trees": "py/epsilon_d6_n5000.qleaf.json",
+    "warmup": 2000
+  },
+  "runs": [
+    {
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "depth": 6,
+      "engine": "qleaf_cpu",
+      "features": 2000,
+      "hdr_log": "bench/results/latency/pinned/epsilon/n5000/qleaf_cpu_t16_unpinned_current/qleaf_cpu_compact_branch_threads_16.hdr",
+      "histogram": "HdrHistogram_c",
+      "iters": 20000,
+      "last_result": 17.72324562072754,
+      "latency": {
+        "count": 20000,
+        "dropped": 0,
+        "max_ns": 1257471,
+        "mean_ns": 10443.7788,
+        "min_ns": 8416,
+        "p50_ns": 9767,
+        "p90_ns": 11623,
+        "p95_ns": 11775,
+        "p99_90_ns": 69119,
+        "p99_99_ns": 134911,
+        "p99_ns": 12871,
+        "stddev_ns": 9335.048063586526
+      },
+      "name": "qleaf/cpu/compact/branch/threads:16",
+      "ntrees": 5000,
+      "percentiles_csv": "bench/results/latency/pinned/epsilon/n5000/qleaf_cpu_t16_unpinned_current/qleaf_cpu_compact_branch_threads_16.percentiles.csv",
+      "samples": 1024,
+      "status": "ok",
+      "threads": 16,
+      "warmup": 2000
+    },
+    {
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "depth": 6,
+      "engine": "qleaf_cpu",
+      "features": 2000,
+      "hdr_log": "bench/results/latency/pinned/epsilon/n5000/qleaf_cpu_t16_unpinned_current/qleaf_cpu_compact_bitmask_threads_16.hdr",
+      "histogram": "HdrHistogram_c",
+      "iters": 20000,
+      "last_result": 17.72324562072754,
+      "latency": {
+        "count": 20000,
+        "dropped": 0,
+        "max_ns": 3104767,
+        "mean_ns": 118324.4496,
+        "min_ns": 110144,
+        "p50_ns": 115583,
+        "p90_ns": 118015,
+        "p95_ns": 119167,
+        "p99_90_ns": 743423,
+        "p99_99_ns": 2607103,
+        "p99_ns": 158719,
+        "stddev_ns": 55102.4537377952
+      },
+      "name": "qleaf/cpu/compact/bitmask/threads:16",
+      "ntrees": 5000,
+      "percentiles_csv": "bench/results/latency/pinned/epsilon/n5000/qleaf_cpu_t16_unpinned_current/qleaf_cpu_compact_bitmask_threads_16.percentiles.csv",
+      "samples": 1024,
+      "status": "ok",
+      "threads": 16,
+      "warmup": 2000
+    }
+  ]
+}

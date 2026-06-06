@@ -1,0 +1,2 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+treelite/tl2cgen-lib/threads:1,ok,2000,35967,38303,46239,102975,36579.664,155007,

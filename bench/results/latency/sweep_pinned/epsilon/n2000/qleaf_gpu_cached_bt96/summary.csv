@@ -1,0 +1,6 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+"qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:0/seqflag:1",ok,20000,20175,23871,35583,411647,22481.5,587263,""
+"qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1",ok,20000,21743,23215,27583,397823,23026,449535,""
+"qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0",ok,20000,30911,38463,53343,405247,34087.4,443647,""
+"qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0",skipped,0,0,0,0,0,0,0,"dynamic shared memory too large"
+"qleaf/gpu/persistent/compact/bt:96/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0",skipped,0,0,0,0,0,0,0,"dynamic shared memory too large"

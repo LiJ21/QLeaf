@@ -1,0 +1,6 @@
+#[# qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8
+]
+#[Histogram log format version 1.2]
+#[StartTime: 0.000 (seconds since epoch), Thu Jan 00:00:00 GMT 1970]
+"StartTimestamp","EndTimestamp","Interval_Max","Interval_Compressed_Histogram"
+0.000,0.123,576511.0,HISTFAAAAhR4nD1SwW4TMRDNvHWmrrPZrjYhhLJaQhuVElUlVFG0ilAJUZSWHkqIoASoSkFFQj3AB3BASFw4op45o/4Cf8CXcOXIDZ63iLU8Hr95fmPPbPrprFYq4Xvp4gv+rcJZ/b0zL939dQH8fIgKLqMMwQJtmTagBVeIAgZGjBVjDCwiVY2sc5FxGotzYbNerzeiJMuajVa7vZalzc2s27mz0t/MB/nGYKs7Gg5P+r3RqDubHOwO8vneZD49frU/nj3anx3tHUxO5qPDZ+M3w7fjw/2to9nx6Xw6m44nw9PdWb69Mc3Hu6Pt3rCf571uv5tvr7W72aDT6bTarfW03UqzNGmttOrN5vK6ZkmUpsvcJPFylDSiNEkadefiRhK5SMJYEdZD59QaVUM8ti4MbWzUhXEoagx3xqoNJTTQkJ7j+52HVVkFnrLWESZVjYqGzleHahAjMBYqPoDA1wzWV0w0YOWMWA+KJyo08GVVllWKmCczLExKhxROCrP+vg1EfVyK4ZVRZPNMLJIR0PqI35cpsoCigwG7SqeqixQtG99WYmKqdAhzFKQaTIBr/+WL1pcLezEruM3JZKtcgmJTxa2CdAlLtNcZvEGFK5R6jD/AU3wWXulBIfZN8BrPcQ58FfxY5ckqzuBT4wkfU8ELHvtA8SXs4D6DXraCqzhnyhr8zb8IXhJ4z1vfJOmj4B3u8Yet4S/X0z3/

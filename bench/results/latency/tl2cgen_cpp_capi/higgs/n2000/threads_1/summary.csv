@@ -1,0 +1,2 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+treelite/tl2cgen-capi/threads:1/output:margin,ok,2000,103807,119231,132991,143103,104401,156543,

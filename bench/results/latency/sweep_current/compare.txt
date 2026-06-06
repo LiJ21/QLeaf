@@ -1,0 +1,60 @@
+# Latency Sweep Summary
+
+| dataset | trees | family | p50 us | p99 us | mean us | best config |
+|---|---:|---|---:|---:|---:|---|
+| epsilon | 500 | FIL GPU | 275.455 | 731.647 | 301.968 | `fil/gpu/input:device/output:device_sync` |
+| epsilon | 500 | Treelite | 34.623 | 49.887 | 35.466 | `treelite/tl2cgen-lib/threads:4` |
+| epsilon | 500 | XGBoost sklearn | 162.559 | 270.079 | 175.602 | `xgboost/sklearn/threads:4/output:margin` |
+| epsilon | 500 | qleaf CPU bitmask | 12.527 | 15.839 | 12.861 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 500 | qleaf CPU traversal | 1.559 | 2.291 | 1.619 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 500 | qleaf GPU bitmask | 7.187 | 12.791 | 8.789 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:32` |
+| epsilon | 500 | qleaf GPU traversal SP | 7.815 | 13.431 | 8.536 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 1000 | FIL GPU | 284.671 | 790.015 | 303.835 | `fil/gpu/input:device/output:device_sync` |
+| epsilon | 1000 | Treelite | 65.727 | 92.927 | 66.790 | `treelite/tl2cgen-lib/threads:2` |
+| epsilon | 1000 | XGBoost sklearn | 200.959 | 312.831 | 213.361 | `xgboost/sklearn/threads:8/output:margin` |
+| epsilon | 1000 | qleaf CPU bitmask | 23.471 | 29.423 | 23.727 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 1000 | qleaf CPU traversal | 2.399 | 3.207 | 2.481 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 1000 | qleaf GPU bitmask | 7.619 | 13.879 | 8.762 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| epsilon | 1000 | qleaf GPU traversal SP | 9.703 | 15.543 | 11.310 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 2000 | FIL GPU | 339.967 | 843.263 | 365.811 | `fil/gpu/input:device/output:device_sync` |
+| epsilon | 2000 | Treelite | 108.287 | 131.967 | 109.603 | `treelite/tl2cgen-lib/threads:1` |
+| epsilon | 2000 | XGBoost sklearn | 276.479 | 580.095 | 295.374 | `xgboost/sklearn/threads:8/output:margin` |
+| epsilon | 2000 | qleaf CPU bitmask | 45.951 | 54.975 | 46.461 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 2000 | qleaf CPU traversal | 3.965 | 6.143 | 4.275 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 2000 | qleaf GPU bitmask | 9.823 | 20.639 | 11.064 | `qleaf/gpu/persistent/compact/bt:512/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| epsilon | 2000 | qleaf GPU traversal SP | 9.695 | 21.151 | 10.813 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 5000 | FIL GPU | 467.711 | 1081.343 | 510.574 | `fil/gpu/input:device/output:device_sync` |
+| epsilon | 5000 | Treelite | 171.263 | 225.535 | 173.953 | `treelite/tl2cgen-lib/threads:1` |
+| epsilon | 5000 | XGBoost sklearn | 518.143 | 792.575 | 542.993 | `xgboost/sklearn/threads:8/output:margin` |
+| epsilon | 5000 | qleaf CPU bitmask | 113.151 | 119.999 | 114.206 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 5000 | qleaf CPU traversal | 7.895 | 10.311 | 8.060 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 5000 | qleaf GPU bitmask | 15.351 | 29.135 | 17.213 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:2` |
+| epsilon | 5000 | qleaf GPU traversal SP | 10.103 | 20.127 | 11.362 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 500 | FIL GPU | 327.167 | 910.847 | 359.829 | `fil/gpu/input:device/output:device_sync` |
+| higgs | 500 | Treelite | 20.815 | 35.647 | 21.743 | `treelite/tl2cgen-lib/threads:2` |
+| higgs | 500 | XGBoost sklearn | 157.439 | 267.775 | 169.692 | `xgboost/sklearn/threads:8/output:margin` |
+| higgs | 500 | qleaf CPU bitmask | 11.111 | 13.799 | 11.166 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 500 | qleaf CPU traversal | 1.435 | 1.679 | 1.446 | `qleaf/cpu/compact/branch/threads:16` |
+| higgs | 500 | qleaf GPU bitmask | 4.363 | 5.959 | 4.913 | `qleaf/gpu/persistent/compact/bt:256/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| higgs | 500 | qleaf GPU traversal SP | 4.175 | 5.143 | 4.585 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 1000 | FIL GPU | 431.103 | 932.351 | 467.770 | `fil/gpu/input:device/output:device_sync` |
+| higgs | 1000 | Treelite | 50.879 | 73.983 | 51.993 | `treelite/tl2cgen-lib/threads:2` |
+| higgs | 1000 | XGBoost sklearn | 197.247 | 314.623 | 210.544 | `xgboost/sklearn/threads:8/output:margin` |
+| higgs | 1000 | qleaf CPU bitmask | 22.847 | 26.479 | 23.042 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 1000 | qleaf CPU traversal | 4.087 | 9.223 | 4.688 | `qleaf/cpu/compact/branch/threads:2` |
+| higgs | 1000 | qleaf GPU bitmask | 4.623 | 6.995 | 5.162 | `qleaf/gpu/persistent/compact/bt:256/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| higgs | 1000 | qleaf GPU traversal SP | 3.945 | 7.175 | 4.604 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 2000 | FIL GPU | 669.183 | 1364.991 | 733.013 | `fil/gpu/input:device/output:device_sync` |
+| higgs | 2000 | Treelite | 124.607 | 172.031 | 126.326 | `treelite/tl2cgen-lib/threads:1` |
+| higgs | 2000 | XGBoost sklearn | 302.335 | 421.375 | 317.851 | `xgboost/sklearn/threads:4/output:margin` |
+| higgs | 2000 | qleaf CPU bitmask | 43.487 | 52.895 | 43.265 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 2000 | qleaf CPU traversal | 7.927 | 20.015 | 9.386 | `qleaf/cpu/compact/branch/threads:8` |
+| higgs | 2000 | qleaf GPU bitmask | 5.391 | 8.823 | 6.146 | `qleaf/gpu/persistent/compact/bt:256/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| higgs | 2000 | qleaf GPU traversal SP | 3.991 | 6.783 | 4.573 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 5000 | FIL GPU | 1592.319 | 2742.271 | 1724.490 | `fil/gpu/input:device/output:device_sync` |
+| higgs | 5000 | Treelite | 376.063 | 695.295 | 392.909 | `treelite/tl2cgen-lib/threads:4` |
+| higgs | 5000 | XGBoost sklearn | 706.559 | 1612.799 | 827.028 | `xgboost/sklearn/threads:16/output:margin` |
+| higgs | 5000 | qleaf CPU bitmask | 109.695 | 158.335 | 108.150 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 5000 | qleaf CPU traversal | 7.347 | 10.591 | 7.832 | `qleaf/cpu/compact/branch/threads:16` |
+| higgs | 5000 | qleaf GPU bitmask | 12.239 | 16.511 | 13.901 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| higgs | 5000 | qleaf GPU traversal SP | 6.507 | 8.111 | 7.064 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |

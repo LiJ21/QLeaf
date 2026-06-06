@@ -1,0 +1,4 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+"qleaf/gpu/persistent/compact/bt:32/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0",ok,5000,6715,7179,9271,245631,7138.88,453119,""
+"qleaf/gpu/persistent/compact/bt:32/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0",skipped,0,0,0,0,0,0,0,"fixed cache does not cover grid-stride waves"
+"qleaf/gpu/persistent/compact/bt:32/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0",ok,5000,4363,4579,8171,29487,4844.31,438783,""

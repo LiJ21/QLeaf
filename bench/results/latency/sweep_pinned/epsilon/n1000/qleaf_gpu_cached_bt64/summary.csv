@@ -1,0 +1,6 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+"qleaf/gpu/persistent/compact/bt:64/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:0/seqflag:1",ok,20000,18863,22559,37183,446975,21718.1,653823,""
+"qleaf/gpu/persistent/compact/bt:64/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:1",ok,20000,29887,32863,184319,521471,33697.5,675327,""
+"qleaf/gpu/persistent/compact/bt:64/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0",ok,20000,46207,49599,310271,554495,52764.6,766463,""
+"qleaf/gpu/persistent/compact/bt:64/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0",ok,20000,45023,48063,259967,557055,50400.5,696319,""
+"qleaf/gpu/persistent/compact/bt:64/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0",ok,20000,45055,48415,259967,507647,50530.5,680447,""

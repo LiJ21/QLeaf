@@ -1,0 +1,2 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+xgboost/sklearn/threads:8/output:margin,ok,20000,146175,154623,260991,274175,150128.4384,314879,

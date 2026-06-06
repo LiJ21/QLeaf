@@ -1,0 +1,6 @@
+#[# qleaf/cpu/compact/branch/threads:1
+]
+#[Histogram log format version 1.2]
+#[StartTime: 0.000 (seconds since epoch), Thu Jan 00:00:00 GMT 1970]
+"StartTimestamp","EndTimestamp","Interval_Max","Interval_Compressed_Histogram"
+0.000,0.019,33631.0,HISTFAAAAPB4nC2N3UrDQBCFd08mm58maUwR01pEamhLDGEpSw2hjVFKBCle+0C+gddeFJ/KJ/DWy3rntHV2Zs/Od1jO+O19IIT4Faey/lXyhPunV3H/cwK7B9hKEoEkKX74cKMoSaJpPplfZ5kupvOxKfSmziuz3JiuWm3rx6ZadttVV5pn07y0i7ZetGXbNbrR+aQoU52N0iy58uM0jeIRBSomNyBS5EsFICDpc17gEucpECQ3yCH0YMNCHx6jIWasbOCCmU2XuGX1eAvhMHaAIc7IZhTyN76OtsXW4bB/jjsMcIM1Z3oHhC+FD+AT+O7hDzrtGxU=

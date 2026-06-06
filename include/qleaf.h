@@ -8,6 +8,7 @@
 #include <cassert>
 #include <concepts>
 #include <functional>
+#include <memory>
 #include <ranges>
 #include <span>
 #include <stop_token>
@@ -275,26 +276,27 @@ class Inferrer {
     workers_.reserve(n_workers);
 
     for (auto i : std::views::iota(size_t{0}, n_workers)) {
-      workers_.emplace_back(config_workers[i], depth_,
-                            nodes_.span(load_balancer.start(i) * tree_size,
-                                        load_balancer.len(i) * tree_size));
+      workers_.push_back(std::make_unique<Worker>(
+          config_workers[i], depth_,
+          nodes_.span(load_balancer.start(i) * tree_size,
+                      load_balancer.len(i) * tree_size)));
     }
     results_ = std::vector<Value>(n_workers, {});
   }
 
   auto predict(const auto &features) {
     for (auto &w : workers_) {
-      w.predict(features);
+      w->predict(features);
     }
     for (auto i : std::views::iota(size_t{0}, workers_.size())) {
-      results_[i] = workers_[i].get();
+      results_[i] = workers_[i]->get();
     }
     return Reducer{}(std::span<Value>(results_));
   }
 
  private:
-  std::vector<Worker> workers_;
   NodeBuffer nodes_;
+  std::vector<std::unique_ptr<Worker>> workers_;
   std::vector<Value> results_;
   size_t depth_;
   size_t n_trees_;
@@ -456,9 +458,8 @@ class BitmaskRegressionWorker {
       auto mask = ones;
       for (size_t i = 0; i < internal_num; ++i) {
         size_t idx = base + i;
-        mask &= features[nodes_.idx(idx)] < nodes_.split(idx) + eps_
-                    ? ones
-                    : masks[i];
+        mask &= features[nodes_.idx(idx)] < nodes_.split(idx) + eps_ ? ones
+                                                                     : masks[i];
       }
       auto leaf_idx = detail::leaf_mask_to_index<kMaxDepth>(mask, depth_);
       result_ += nodes_.split(base + internal_num + leaf_idx);

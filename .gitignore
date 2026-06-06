@@ -1,0 +1,7 @@
+# CMake build trees
+build/
+build-*/
+
+# object files / editor cruft
+*.o
+*.obj

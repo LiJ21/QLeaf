@@ -1,0 +1,4 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+fil/gpu/input:host/output:host,ok,2000,351743,451327,828927,1182719,401560.192,44597247,
+fil/gpu/input:device/output:host,ok,2000,264447,359167,722943,1054719,290233.792,1103871,
+fil/gpu/input:device/output:device_sync,ok,2000,237823,329471,670719,823295,260594.56,844799,

@@ -1,0 +1,4 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+xgboost/sklearn/threads:16/output:margin,ok,2000,706559,1104895,1612799,1924095,827028.224,19841023,
+treelite/gtil/threads:16,ok,2000,1330175,2174975,3233791,4214783,1481292.8,4534271,
+fil/gpu/layout:depth_first/chunk:None/input:host,skipped,0,0,0,0,0,0,0,RAPIDS cuml.fil unavailable: No module named 'cuml'

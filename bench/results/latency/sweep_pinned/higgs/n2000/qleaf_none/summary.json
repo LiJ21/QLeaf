@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "compiled_bt": 256,
+    "depth": 6,
+    "features": 28,
+    "features_csv": "bench/data/higgs_d6_n5000.feats.csv",
+    "gpu_suite": "best",
+    "histogram": "HdrHistogram_c",
+    "iters": 20000,
+    "ntrees": 2000,
+    "pin_cores": [],
+    "samples": 1024,
+    "trees": "bench/data/higgs_d6_n5000.qleaf.json",
+    "warmup": 2000
+  },
+  "runs": []
+}

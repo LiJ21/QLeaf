@@ -1,0 +1,12 @@
+# Latency Sweep Summary
+
+| dataset | trees | family | p50 us | p99 us | mean us | best config |
+|---|---:|---|---:|---:|---:|---|
+| epsilon | 500 | FIL GPU | 241.151 | 652.287 | 263.782 | `fil/gpu/input:device/output:device_sync` |
+| epsilon | 1000 | FIL GPU | 243.071 | 702.463 | 268.264 | `fil/gpu/input:device/output:device_sync` |
+| epsilon | 2000 | FIL GPU | 251.007 | 675.839 | 275.601 | `fil/gpu/input:device/output:device_sync` |
+| epsilon | 5000 | FIL GPU | 263.679 | 794.623 | 289.921 | `fil/gpu/input:device/output:device_sync` |
+| higgs | 500 | FIL GPU | 231.679 | 667.135 | 255.034 | `fil/gpu/input:device/output:device_sync` |
+| higgs | 1000 | FIL GPU | 237.823 | 670.719 | 260.595 | `fil/gpu/input:device/output:device_sync` |
+| higgs | 2000 | FIL GPU | 248.703 | 700.415 | 273.085 | `fil/gpu/input:device/output:device_sync` |
+| higgs | 5000 | FIL GPU | 294.399 | 938.495 | 321.196 | `fil/gpu/input:device/output:device_sync` |

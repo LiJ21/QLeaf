@@ -1,0 +1,2 @@
+name,status,count,p50_ns,p90_ns,p99_ns,p99_9_ns,mean_ns,max_ns,reason
+"qleaf/cpu/compact/branch/threads:8",ok,20000,3993599,6000639,6004735,7004159,3.11739e+06,7016447,""

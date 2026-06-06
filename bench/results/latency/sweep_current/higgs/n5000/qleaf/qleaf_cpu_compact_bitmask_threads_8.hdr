@@ -1,0 +1,6 @@
+#[# qleaf/cpu/compact/bitmask/threads:8
+]
+#[Histogram log format version 1.2]
+#[StartTime: 0.000 (seconds since epoch), Thu Jan 00:00:00 GMT 1970]
+"StartTimestamp","EndTimestamp","Interval_Max","Interval_Compressed_Histogram"
+0.000,0.418,301823.0,HISTFAAAAbF4nDVSMbLUMAxdy4pWeBVNZn/GLDthZ+eXzK8+NUPJAWi4AyU1HRdgOBpH4AKUlLznQJwolvT8ZPtp+/bj4XCQX4f9qf/+Bd/858Onw/vfe+D7VznJT5EvIvJR3sKpcoQtsv/0QRCpmGpF8MUYIhNdGCVQYCYavEcMqwirDDhMlVkJqjqCOv1fo8yZCWhshp0UEeXjgwtDR7ZYEVdR1jOlL3RMB5Gbgnufl8ZEAFRNuNitEFnUBQbrG/eGJZqkAwpULi6B0hY66jSyuGOtSLNizmMypdrczJDCSYx13DNI6toMKUWSOA84IMxssSAIQIq1BM4anBa+z6KpRkgailqkLGYZHnDMc3W7tAyLjlI9F3Ngmp1tWTKW8CXa2qPF2nteVqDy/niJ7Nflel23rd+u9+15u9+enm79/KbfHtdLP2dfc4lIPBHREvsWnih4kdi44cC4Zt5LUQpQtI7Z0NIoKnWD/iIzm4PSU0oIy7jsvTAxS6nrkJkwNtCOYHNRL4o/DZ3Jxh4ZKeZOo4VmTE+wrzFeyit8x0EzjZKT7GXYNSwhutcbbGOT7+Sz/AXKlRqq

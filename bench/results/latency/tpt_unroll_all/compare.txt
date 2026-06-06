@@ -1,0 +1,12 @@
+# Latency Sweep Summary
+
+| dataset | trees | family | p50 us | p99 us | mean us | best config |
+|---|---:|---|---:|---:|---:|---|
+| epsilon | 500 | qleaf GPU bitmask | 6.635 | 12.199 | 7.449 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:32` |
+| epsilon | 1000 | qleaf GPU bitmask | 7.175 | 12.759 | 7.950 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| epsilon | 2000 | qleaf GPU bitmask | 8.163 | 14.575 | 9.241 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| epsilon | 5000 | qleaf GPU bitmask | 13.927 | 20.383 | 15.273 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |
+| higgs | 500 | qleaf GPU bitmask | 3.929 | 5.139 | 4.336 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| higgs | 1000 | qleaf GPU bitmask | 4.595 | 5.807 | 5.249 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |
+| higgs | 2000 | qleaf GPU bitmask | 5.271 | 7.407 | 6.083 | `qleaf/gpu/persistent/compact/bt:512/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| higgs | 5000 | qleaf GPU bitmask | 11.391 | 18.303 | 12.535 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |

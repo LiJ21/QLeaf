@@ -1,0 +1,6 @@
+#[# qleaf/gpu/persistent/compact/bt:256/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:1
+]
+#[Histogram log format version 1.2]
+#[StartTime: 0.000 (seconds since epoch), Thu Jan 00:00:00 GMT 1970]
+"StartTimestamp","EndTimestamp","Interval_Max","Interval_Compressed_Histogram"
+0.000,0.040,485375.0,HISTFAAAAUF4nC1OwUrDQBDNvp2k25omFSNaCSVWjWkUiRVsCCUqFFu0qAcF8aD+g3jWgzePnj16Eg8ePPkNfoFf4E3wInhxNu3Ovh3evDez4989TBmGuDVGR46zYFR/+6fG1veo8HFEZQgdimpwbK/GETQbYRSHzSCJ4iyKg9W0GybttW6WJWE6yIfHeXa+Nzw7GGznl73dXppsZm2/sTjrRV7g1WxbeX5lzrGdikWOBUdVHEWWIiIbCiALYKZYkUSKhCUhGRYLgsC7gIngR8JklFDmBkiSWhjJWmWBTBS26rhscpS0xB16lCxCFNB+wdAv33mdXGBB16eZTKCDwuAyveLvOtjXjgse1sc1z1jCCpa50WXTDPtLaGEdO8WSk8ye9dQWfgQ9Chzi3sQf8FnHBt4IJ/Sqf3oSqONd4MXEF+EG/4VnJZw=

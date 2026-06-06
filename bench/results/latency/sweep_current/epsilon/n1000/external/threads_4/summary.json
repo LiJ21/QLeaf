@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "python": "3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0]",
+    "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+    "clock": "time.perf_counter_ns",
+    "histogram": "hdrhistogram",
+    "xgboost": "3.2.0",
+    "treelite": "4.7.0",
+    "treelite_runtime": "3.9.1",
+    "cuml": null,
+    "cupy": null,
+    "features": 2000,
+    "samples": 1024,
+    "warmup": 200,
+    "iters": 2000,
+    "ntrees": 1000
+  },
+  "runs": [
+    {
+      "name": "xgboost/sklearn/threads:4/output:margin",
+      "status": "ok",
+      "clock": "time.perf_counter_ns",
+      "histogram": "hdrhistogram",
+      "warmup": 200,
+      "iters": 2000,
+      "samples": 1024,
+      "features": 2000,
+      "ntrees": 1000,
+      "last_result": 8.708744049072266,
+      "elapsed_ns": 449649197,
+      "latency": {
+        "count": 2000,
+        "dropped": 0,
+        "min_ns": 195840,
+        "max_ns": 17514495,
+        "mean_ns": 221526.144,
+        "stddev_ns": 387033.2870391115,
+        "p50_ns": 208639,
+        "p90_ns": 223231,
+        "p95_ns": 233343,
+        "p99_ns": 317183,
+        "p99_90_ns": 345599,
+        "p99_99_ns": 17514495
+      },
+      "engine": "xgboost_sklearn",
+      "xgboost_version": "3.2.0",
+      "percentiles_csv": "bench/results/latency/sweep_current/epsilon/n1000/external/threads_4/xgboost_sklearn_threads_4_output_margin.percentiles.csv"
+    },
+    {
+      "name": "treelite/gtil/threads:4",
+      "status": "ok",
+      "clock": "time.perf_counter_ns",
+      "histogram": "hdrhistogram",
+      "warmup": 200,
+      "iters": 2000,
+      "samples": 1024,
+      "features": 2000,
+      "ntrees": 1000,
+      "last_result": 8.708744049072266,
+      "elapsed_ns": 236064795,
+      "latency": {
+        "count": 2000,
+        "dropped": 0,
+        "min_ns": 105984,
+        "max_ns": 321791,
+        "mean_ns": 116045.744,
+        "stddev_ns": 10825.781992191789,
+        "p50_ns": 114751,
+        "p90_ns": 122751,
+        "p95_ns": 130431,
+        "p99_ns": 163711,
+        "p99_90_ns": 212863,
+        "p99_99_ns": 321791
+      },
+      "engine": "treelite_gtil",
+      "treelite_version": "4.7.0",
+      "percentiles_csv": "bench/results/latency/sweep_current/epsilon/n1000/external/threads_4/treelite_gtil_threads_4.percentiles.csv"
+    },
+    {
+      "name": "fil/gpu/layout:depth_first/chunk:None/input:host",
+      "status": "skipped",
+      "clock": "time.perf_counter_ns",
+      "histogram": "hdrhistogram",
+      "warmup": 200,
+      "iters": 2000,
+      "samples": 1024,
+      "features": 2000,
+      "ntrees": 1000,
+      "reason": "RAPIDS cuml.fil unavailable: No module named 'cuml'"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "compiled_bt": 256,
+    "depth": 6,
+    "features": 28,
+    "features_csv": "bench/data/higgs_d6_n5000.feats.csv",
+    "gpu_suite": "best",
+    "histogram": "HdrHistogram_c",
+    "iters": 2000,
+    "ntrees": 5000,
+    "samples": 1024,
+    "trees": "bench/data/higgs_d6_n5000.qleaf.json",
+    "warmup": 200
+  },
+  "runs": [
+    {
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "depth": 6,
+      "engine": "qleaf_cpu",
+      "features": 28,
+      "hdr_log": "bench/results/latency/inferrer_refactor_fix_probe/higgs/n5000/cpu_t16_old_counts_current_rep1/qleaf_cpu_compact_branch_threads_16.hdr",
+      "histogram": "HdrHistogram_c",
+      "iters": 2000,
+      "last_result": 4.986016750335693,
+      "latency": {
+        "count": 2000,
+        "dropped": 0,
+        "max_ns": 104767,
+        "mean_ns": 8169.144,
+        "min_ns": 6640,
+        "p50_ns": 8143,
+        "p90_ns": 8767,
+        "p95_ns": 8943,
+        "p99_90_ns": 64351,
+        "p99_99_ns": 104767,
+        "p99_ns": 12319,
+        "stddev_ns": 3016.9760110521265
+      },
+      "name": "qleaf/cpu/compact/branch/threads:16",
+      "ntrees": 5000,
+      "percentiles_csv": "bench/results/latency/inferrer_refactor_fix_probe/higgs/n5000/cpu_t16_old_counts_current_rep1/qleaf_cpu_compact_branch_threads_16.percentiles.csv",
+      "samples": 1024,
+      "status": "ok",
+      "threads": 16,
+      "warmup": 200
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+# Latency Sweep Summary
+
+| dataset | trees | family | p50 us | p99 us | mean us | best config |
+|---|---:|---|---:|---:|---:|---|
+| epsilon | 500 | qleaf CPU bitmask | 12.239 | 14.591 | 12.411 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 500 | qleaf CPU traversal | 1.425 | 2.523 | 1.541 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 500 | qleaf GPU bitmask | 6.627 | 10.431 | 7.326 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| epsilon | 500 | qleaf GPU traversal SP | 7.803 | 11.671 | 8.556 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 1000 | qleaf CPU bitmask | 23.343 | 28.767 | 23.785 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 1000 | qleaf CPU traversal | 2.283 | 2.899 | 2.336 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 1000 | qleaf GPU bitmask | 7.011 | 11.127 | 7.853 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| epsilon | 1000 | qleaf GPU traversal SP | 9.343 | 18.095 | 10.339 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:0/seqflag:1` |
+| epsilon | 2000 | qleaf CPU bitmask | 45.663 | 49.183 | 45.950 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 2000 | qleaf CPU traversal | 3.609 | 4.343 | 3.663 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 2000 | qleaf GPU bitmask | 8.035 | 12.631 | 8.986 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| epsilon | 2000 | qleaf GPU traversal SP | 9.575 | 14.391 | 10.467 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 5000 | qleaf CPU bitmask | 112.639 | 136.959 | 113.411 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 5000 | qleaf CPU traversal | 10.967 | 15.327 | 10.741 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 5000 | qleaf GPU bitmask | 13.863 | 18.255 | 14.733 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |
+| epsilon | 5000 | qleaf GPU traversal SP | 10.111 | 19.935 | 11.148 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 500 | qleaf CPU bitmask | 11.039 | 13.175 | 11.103 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 500 | qleaf CPU traversal | 1.025 | 1.355 | 1.050 | `qleaf/cpu/compact/branch/threads:16` |
+| higgs | 500 | qleaf GPU bitmask | 3.919 | 5.027 | 4.249 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| higgs | 500 | qleaf GPU traversal SP | 3.921 | 4.987 | 4.390 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 1000 | qleaf CPU bitmask | 22.063 | 27.119 | 22.219 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 1000 | qleaf CPU traversal | 1.644 | 1.847 | 1.669 | `qleaf/cpu/compact/branch/threads:16` |
+| higgs | 1000 | qleaf GPU bitmask | 4.575 | 5.843 | 4.994 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |
+| higgs | 1000 | qleaf GPU traversal SP | 3.999 | 5.123 | 4.454 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 2000 | qleaf CPU bitmask | 43.487 | 62.687 | 43.251 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 2000 | qleaf CPU traversal | 3.097 | 3.583 | 3.153 | `qleaf/cpu/compact/branch/threads:16` |
+| higgs | 2000 | qleaf GPU bitmask | 4.971 | 6.115 | 5.378 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |
+| higgs | 2000 | qleaf GPU traversal SP | 3.907 | 5.343 | 4.281 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 5000 | qleaf CPU bitmask | 108.415 | 150.399 | 109.123 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 5000 | qleaf CPU traversal | 15.071 | 25.791 | 15.707 | `qleaf/cpu/compact/branch/threads:8` |
+| higgs | 5000 | qleaf GPU bitmask | 11.295 | 21.775 | 12.620 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |
+| higgs | 5000 | qleaf GPU traversal SP | 6.195 | 9.959 | 7.012 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |

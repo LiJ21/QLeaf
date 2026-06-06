@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "python": "3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0]",
+    "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+    "clock": "time.perf_counter_ns",
+    "histogram": "hdrhistogram",
+    "xgboost": "3.2.0",
+    "treelite": "4.7.0",
+    "treelite_runtime": "3.9.1",
+    "cuml": null,
+    "cupy": null,
+    "features": 2000,
+    "samples": 1024,
+    "warmup": 200,
+    "iters": 2000,
+    "ntrees": 2000
+  },
+  "runs": [
+    {
+      "name": "treelite/tl2cgen-lib/threads:16",
+      "status": "ok",
+      "clock": "time.perf_counter_ns",
+      "histogram": "hdrhistogram",
+      "warmup": 200,
+      "iters": 2000,
+      "samples": 1024,
+      "features": 2000,
+      "ntrees": 2000,
+      "last_result": 9.93635368347168,
+      "elapsed_ns": 278816637,
+      "latency": {
+        "count": 2000,
+        "dropped": 0,
+        "min_ns": 124608,
+        "max_ns": 235519,
+        "mean_ns": 136292.608,
+        "stddev_ns": 6802.443326800745,
+        "p50_ns": 135807,
+        "p90_ns": 141055,
+        "p95_ns": 142847,
+        "p99_ns": 147711,
+        "p99_90_ns": 220543,
+        "p99_99_ns": 235519
+      },
+      "engine": "treelite_tl2cgen",
+      "treelite_version": "4.7.0",
+      "tl2cgen_version": "1.0.0",
+      "compiled_lib": "bench/results/latency/sweep_current/epsilon/n2000/external_tl2cgen/tl2cgen_n2000.so",
+      "compiled_now": false,
+      "percentiles_csv": "bench/results/latency/sweep_current/epsilon/n2000/external_tl2cgen/threads_16/treelite_tl2cgen-lib_threads_16.percentiles.csv"
+    }
+  ]
+}

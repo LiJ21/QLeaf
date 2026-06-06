@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "python": "3.12.13 (main, Apr  7 2026, 20:45:25) [Clang 22.1.1 ]",
+    "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+    "clock": "time.perf_counter_ns",
+    "histogram": "hdrhistogram",
+    "xgboost": "3.2.0",
+    "treelite": "4.7.0",
+    "tl2cgen": "1.0.0",
+    "cuml": "26.06.00",
+    "cupy": "14.1.1",
+    "features": 2000,
+    "samples": 1024,
+    "warmup": 1,
+    "iters": 1,
+    "ntrees": 2000
+  },
+  "runs": []
+}

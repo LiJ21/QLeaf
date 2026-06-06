@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "python": "3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0]",
+    "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+    "clock": "time.perf_counter_ns",
+    "histogram": "hdrhistogram",
+    "xgboost": "3.2.0",
+    "treelite": "4.7.0",
+    "treelite_runtime": "3.9.1",
+    "cuml": "25.10.00",
+    "cupy": "14.1.1",
+    "features": 28,
+    "samples": 1024,
+    "warmup": 200,
+    "iters": 2000,
+    "ntrees": 2000
+  },
+  "runs": [
+    {
+      "name": "fil/gpu/layout:depth_first/chunk:None/input:host",
+      "status": "ok",
+      "clock": "time.perf_counter_ns",
+      "histogram": "hdrhistogram",
+      "warmup": 200,
+      "iters": 2000,
+      "samples": 1024,
+      "features": 28,
+      "ntrees": 2000,
+      "last_result": 1.0,
+      "elapsed_ns": 1685435356,
+      "latency": {
+        "count": 2000,
+        "dropped": 0,
+        "min_ns": 659968,
+        "max_ns": 44040191,
+        "mean_ns": 837855.232,
+        "stddev_ns": 978739.1026948183,
+        "p50_ns": 754175,
+        "p90_ns": 1084415,
+        "p95_ns": 1231871,
+        "p99_ns": 1335295,
+        "p99_90_ns": 1448959,
+        "p99_99_ns": 44040191
+      },
+      "engine": "fil",
+      "cuml_version": "25.10.00",
+      "model_source": "file",
+      "percentiles_csv": "bench/results/latency/sweep_current/higgs/n2000/external/threads_1/fil_gpu_layout_depth_first_chunk_None_input_host.percentiles.csv"
+    }
+  ]
+}

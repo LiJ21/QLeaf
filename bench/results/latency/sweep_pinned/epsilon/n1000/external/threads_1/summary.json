@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "python": "3.12.13 (main, Apr  7 2026, 20:45:25) [Clang 22.1.1 ]",
+    "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+    "clock": "time.perf_counter_ns",
+    "histogram": "hdrhistogram",
+    "xgboost": "3.2.0",
+    "treelite": "4.7.0",
+    "tl2cgen": "1.0.0",
+    "cuml": "26.06.00",
+    "cupy": "14.1.1",
+    "features": 2000,
+    "samples": 1024,
+    "warmup": 2000,
+    "iters": 20000,
+    "ntrees": 1000
+  },
+  "runs": [
+    {
+      "name": "xgboost/sklearn/threads:1/output:margin",
+      "status": "ok",
+      "clock": "time.perf_counter_ns",
+      "histogram": "hdrhistogram",
+      "warmup": 2000,
+      "iters": 20000,
+      "samples": 1024,
+      "features": 2000,
+      "ntrees": 1000,
+      "last_result": 12.734692573547363,
+      "elapsed_ns": 6712113041,
+      "latency": {
+        "count": 20000,
+        "dropped": 0,
+        "min_ns": 300288,
+        "max_ns": 608255,
+        "mean_ns": 332220.9408,
+        "stddev_ns": 24468.26362868636,
+        "p50_ns": 327167,
+        "p90_ns": 355327,
+        "p95_ns": 373759,
+        "p99_ns": 440575,
+        "p99_90_ns": 493823,
+        "p99_99_ns": 542207
+      },
+      "engine": "xgboost_sklearn",
+      "xgboost_version": "3.2.0",
+      "percentiles_csv": "bench/results/latency/sweep_pinned/epsilon/n1000/external/threads_1/xgboost_sklearn_threads_1_output_margin.percentiles.csv"
+    }
+  ]
+}

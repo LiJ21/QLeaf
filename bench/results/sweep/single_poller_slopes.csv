@@ -1,0 +1,7 @@
+dataset,features,config,slope_us_per_block,intercept_us,poll_at_20blk_us
+higgs,28,config0,1.2073,5.7736,30.269
+higgs,28,config1,0.1828,6.5773,10.351
+higgs,28,config2,0.1969,6.7075,10.840
+epsilon,2000,config0,1.7841,6.3203,42.619
+epsilon,2000,config1,0.6271,7.8453,20.497
+epsilon,2000,config2,0.1783,11.6748,15.447

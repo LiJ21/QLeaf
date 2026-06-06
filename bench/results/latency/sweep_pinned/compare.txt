@@ -1,0 +1,82 @@
+# Latency Sweep Summary
+
+| dataset | trees | family | p50 us | p90 us | p99 us | mean us | best config |
+|---|---:|---|---:|---:|---:|---:|---|
+| epsilon | 500 | Treelite | 23.055 | 25.503 | 38.687 | 23.506 | `treelite/tl2cgen-capi/threads:1/output:margin` |
+| epsilon | 500 | XGBoost sklearn | 149.119 | 159.999 | 264.191 | 153.580 | `xgboost/sklearn/threads:8/output:margin` |
+| epsilon | 500 | nvForest GPU | 13.095 | 13.703 | 17.551 | 13.730 | `nvforest/gpu/input:device/output:device_sync/layout:depth_first/rows_per_block_iter:1/align_bytes:0` |
+| epsilon | 500 | qleaf CPU bitmask | 11.007 | 11.319 | 12.727 | 11.064 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 500 | qleaf CPU traversal | 1.235 | 1.456 | 1.814 | 1.251 | `qleaf/cpu/compact/branch/threads:8` |
+| epsilon | 500 | qleaf GPU bitmask | 7.187 | 9.639 | 13.239 | 8.757 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| epsilon | 500 | qleaf GPU traversal SP | 7.799 | 8.575 | 11.775 | 8.509 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 500 | qleaf GPU traversal SP cached all-waves | 44.575 | 48.255 | 258.303 | 50.314 | `qleaf/gpu/persistent/compact/bt:64/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 500 | qleaf GPU traversal SP cached one-wave | 44.575 | 48.031 | 258.175 | 50.284 | `qleaf/gpu/persistent/compact/bt:64/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 1000 | Treelite | 50.495 | 55.103 | 66.687 | 51.276 | `treelite/tl2cgen-capi/threads:1/output:margin` |
+| epsilon | 1000 | XGBoost sklearn | 186.367 | 196.479 | 303.359 | 190.236 | `xgboost/sklearn/threads:8/output:margin` |
+| epsilon | 1000 | nvForest GPU | 16.479 | 17.247 | 22.031 | 17.374 | `nvforest/gpu/input:device/output:device_sync/layout:depth_first/rows_per_block_iter:1/align_bytes:0` |
+| epsilon | 1000 | qleaf CPU bitmask | 20.783 | 21.199 | 22.751 | 20.852 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 1000 | qleaf CPU traversal | 1.701 | 1.985 | 2.317 | 1.770 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 1000 | qleaf GPU bitmask | 7.411 | 9.511 | 12.567 | 8.439 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| epsilon | 1000 | qleaf GPU traversal SP | 9.511 | 10.135 | 13.311 | 10.626 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 1000 | qleaf GPU traversal SP cached all-waves | 45.055 | 48.415 | 259.967 | 50.531 | `qleaf/gpu/persistent/compact/bt:64/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 1000 | qleaf GPU traversal SP cached one-wave | 45.023 | 48.063 | 259.967 | 50.401 | `qleaf/gpu/persistent/compact/bt:64/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 2000 | Treelite | 96.191 | 102.975 | 119.871 | 96.811 | `treelite/tl2cgen-capi/threads:1/output:margin` |
+| epsilon | 2000 | XGBoost sklearn | 262.399 | 276.735 | 389.119 | 267.056 | `xgboost/sklearn/threads:8/output:margin` |
+| epsilon | 2000 | nvForest GPU | 23.327 | 24.271 | 34.335 | 24.620 | `nvforest/gpu/input:device/output:device_sync/layout:depth_first/rows_per_block_iter:1/align_bytes:0` |
+| epsilon | 2000 | qleaf CPU bitmask | 40.447 | 41.151 | 43.135 | 40.581 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 2000 | qleaf CPU traversal | 2.757 | 3.035 | 3.395 | 2.829 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 2000 | qleaf GPU bitmask | 8.535 | 10.287 | 12.247 | 9.477 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| epsilon | 2000 | qleaf GPU traversal SP | 9.567 | 10.847 | 14.943 | 10.926 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 5000 | Treelite | 155.903 | 166.911 | 182.015 | 156.624 | `treelite/tl2cgen-capi/threads:1/output:margin` |
+| epsilon | 5000 | XGBoost sklearn | 513.791 | 646.655 | 1340.415 | 568.885 | `xgboost/sklearn/threads:8/output:margin` |
+| epsilon | 5000 | nvForest GPU | 39.359 | 41.247 | 55.487 | 41.474 | `nvforest/gpu/input:device/output:device_sync/layout:depth_first/rows_per_block_iter:1/align_bytes:0` |
+| epsilon | 5000 | qleaf CPU bitmask | 98.239 | 99.775 | 101.631 | 98.123 | `qleaf/cpu/compact/bitmask/threads:16` |
+| epsilon | 5000 | qleaf CPU traversal | 6.103 | 6.375 | 7.187 | 6.149 | `qleaf/cpu/compact/branch/threads:16` |
+| epsilon | 5000 | qleaf GPU bitmask | 15.063 | 16.087 | 20.607 | 17.021 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |
+| epsilon | 5000 | qleaf GPU traversal SP | 10.063 | 10.639 | 12.887 | 10.627 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 500 | Treelite | 10.039 | 12.575 | 16.527 | 10.386 | `treelite/tl2cgen-capi/threads:1/output:margin` |
+| higgs | 500 | XGBoost sklearn | 146.175 | 154.623 | 260.991 | 150.128 | `xgboost/sklearn/threads:8/output:margin` |
+| higgs | 500 | nvForest GPU | 10.735 | 11.527 | 15.903 | 11.401 | `nvforest/gpu/input:device/output:device_sync/layout:breadth_first/rows_per_block_iter:1/align_bytes:128` |
+| higgs | 500 | qleaf CPU bitmask | 10.447 | 10.719 | 11.951 | 10.366 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 500 | qleaf CPU traversal | 1.908 | 2.181 | 2.395 | 1.920 | `qleaf/cpu/compact/branch/threads:16` |
+| higgs | 500 | qleaf GPU bitmask | 4.089 | 4.527 | 5.195 | 4.603 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| higgs | 500 | qleaf GPU traversal SP | 3.683 | 4.327 | 5.387 | 4.042 | `qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 500 | qleaf GPU traversal SP cached all-waves | 3.203 | 3.459 | 4.251 | 3.290 | `qleaf/gpu/persistent/compact/bt:96/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 500 | qleaf GPU traversal SP cached one-wave | 3.107 | 3.411 | 4.523 | 3.209 | `qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 1000 | Treelite | 32.287 | 39.135 | 49.023 | 33.056 | `treelite/tl2cgen-capi/threads:1/output:margin` |
+| higgs | 1000 | XGBoost sklearn | 186.239 | 202.239 | 314.111 | 192.662 | `xgboost/sklearn/threads:8/output:margin` |
+| higgs | 1000 | nvForest GPU | 14.719 | 16.039 | 20.639 | 15.667 | `nvforest/gpu/input:device/output:device_sync/layout:depth_first/rows_per_block_iter:1/align_bytes:128` |
+| higgs | 1000 | qleaf CPU bitmask | 20.095 | 20.575 | 21.967 | 19.822 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 1000 | qleaf CPU traversal | 1.555 | 1.697 | 2.565 | 1.603 | `qleaf/cpu/compact/branch/threads:8` |
+| higgs | 1000 | qleaf GPU bitmask | 4.683 | 4.871 | 7.171 | 4.972 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| higgs | 1000 | qleaf GPU traversal SP | 3.879 | 4.199 | 5.239 | 4.132 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 1000 | qleaf GPU traversal SP cached all-waves | 3.515 | 3.617 | 5.211 | 3.733 | `qleaf/gpu/persistent/compact/bt:96/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 1000 | qleaf GPU traversal SP cached one-wave | 3.499 | 3.631 | 5.279 | 3.672 | `qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 2000 | Treelite | 98.367 | 112.511 | 131.327 | 99.255 | `treelite/tl2cgen-capi/threads:1/output:margin` |
+| higgs | 2000 | XGBoost sklearn | 261.375 | 281.599 | 388.863 | 267.144 | `xgboost/sklearn/threads:8/output:margin` |
+| higgs | 2000 | nvForest GPU | 21.743 | 23.951 | 32.319 | 23.145 | `nvforest/gpu/input:device/output:device_sync/layout:breadth_first/rows_per_block_iter:1/align_bytes:128` |
+| higgs | 2000 | qleaf CPU bitmask | 39.391 | 40.383 | 42.719 | 38.809 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 2000 | qleaf CPU traversal | 2.513 | 2.727 | 3.255 | 2.565 | `qleaf/cpu/compact/branch/threads:16` |
+| higgs | 2000 | qleaf GPU bitmask | 5.295 | 5.775 | 8.059 | 5.970 | `qleaf/gpu/persistent/compact/bt:512/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| higgs | 2000 | qleaf GPU traversal SP | 4.555 | 4.735 | 5.847 | 4.718 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 2000 | qleaf GPU traversal SP cached all-waves | 3.721 | 3.889 | 5.519 | 3.947 | `qleaf/gpu/persistent/compact/bt:96/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 2000 | qleaf GPU traversal SP cached one-wave | 3.693 | 3.895 | 5.487 | 3.938 | `qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 5000 | Treelite | 313.855 | 374.527 | 517.631 | 323.230 | `treelite/tl2cgen-capi/threads:1/output:margin` |
+| higgs | 5000 | XGBoost sklearn | 763.391 | 1545.215 | 3174.399 | 992.046 | `xgboost/sklearn/threads:8/output:margin` |
+| higgs | 5000 | nvForest GPU | 66.815 | 68.543 | 88.703 | 69.234 | `nvforest/gpu/input:device/output:device_sync/layout:depth_first/rows_per_block_iter:1/align_bytes:128` |
+| higgs | 5000 | qleaf CPU bitmask | 96.959 | 99.583 | 110.015 | 103.832 | `qleaf/cpu/compact/bitmask/threads:16` |
+| higgs | 5000 | qleaf CPU traversal | 5.431 | 5.767 | 6.883 | 5.561 | `qleaf/cpu/compact/branch/threads:16` |
+| higgs | 5000 | qleaf GPU bitmask | 11.351 | 11.823 | 14.183 | 11.961 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |
+| higgs | 5000 | qleaf GPU traversal SP | 6.703 | 6.891 | 8.495 | 6.957 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+
+## Skips
+- higgs n=5000 qleaf GPU traversal SP cached one-wave: persistent grid not co-resident
+- higgs n=5000 qleaf GPU traversal SP cached all-waves: persistent grid not co-resident
+- epsilon n=5000 qleaf GPU traversal SP cached one-wave: persistent grid not co-resident
+- epsilon n=5000 qleaf GPU traversal SP cached all-waves: persistent grid not co-resident
+- epsilon n=5000 qleaf GPU traversal SP cached one-wave: dynamic shared memory too large
+- epsilon n=5000 qleaf GPU traversal SP cached all-waves: dynamic shared memory too large
+- epsilon n=2000 qleaf GPU traversal SP cached one-wave: persistent grid not co-resident
+- epsilon n=2000 qleaf GPU traversal SP cached all-waves: persistent grid not co-resident
+- epsilon n=2000 qleaf GPU traversal SP cached one-wave: dynamic shared memory too large
+- epsilon n=2000 qleaf GPU traversal SP cached all-waves: dynamic shared memory too large

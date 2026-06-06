@@ -1,0 +1,44 @@
+# Latency Sweep Summary
+
+| dataset | trees | family | p50 us | p90 us | p99 us | mean us | best config |
+|---|---:|---|---:|---:|---:|---:|---|
+| epsilon | 500 | qleaf GPU bitmask | 6.979 | 8.615 | 10.415 | 7.855 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| epsilon | 500 | qleaf GPU traversal SP | 7.803 | 8.951 | 13.607 | 8.779 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 500 | qleaf GPU traversal SP cached all-waves | 44.031 | 45.727 | 56.159 | 47.269 | `qleaf/gpu/persistent/compact/bt:64/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 500 | qleaf GPU traversal SP cached one-wave | 43.999 | 45.599 | 201.983 | 47.440 | `qleaf/gpu/persistent/compact/bt:64/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 1000 | qleaf GPU bitmask | 7.507 | 9.255 | 11.711 | 8.712 | `qleaf/gpu/persistent/compact/bt:1024/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| epsilon | 1000 | qleaf GPU traversal SP | 9.527 | 10.039 | 13.007 | 10.414 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 1000 | qleaf GPU traversal SP cached all-waves | 44.511 | 46.207 | 54.175 | 47.742 | `qleaf/gpu/persistent/compact/bt:64/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 1000 | qleaf GPU traversal SP cached one-wave | 44.351 | 46.143 | 56.319 | 47.588 | `qleaf/gpu/persistent/compact/bt:64/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 2000 | qleaf GPU bitmask | 9.623 | 11.039 | 16.879 | 11.007 | `qleaf/gpu/persistent/compact/bt:512/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:16` |
+| epsilon | 2000 | qleaf GPU traversal SP | 9.575 | 10.519 | 14.007 | 10.559 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| epsilon | 5000 | qleaf GPU bitmask | 15.119 | 15.735 | 18.799 | 16.112 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |
+| epsilon | 5000 | qleaf GPU traversal SP | 10.271 | 12.295 | 16.783 | 11.520 | `qleaf/gpu/persistent/compact/bt:1024/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 500 | qleaf GPU bitmask | 4.001 | 4.687 | 5.935 | 4.490 | `qleaf/gpu/persistent/compact/bt:512/transposed:0/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| higgs | 500 | qleaf GPU traversal SP | 3.707 | 4.315 | 5.331 | 4.176 | `qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 500 | qleaf GPU traversal SP cached all-waves | 3.321 | 3.471 | 4.691 | 3.445 | `qleaf/gpu/persistent/compact/bt:96/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 500 | qleaf GPU traversal SP cached one-wave | 3.299 | 3.447 | 4.179 | 3.407 | `qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 1000 | qleaf GPU bitmask | 4.771 | 5.019 | 7.011 | 5.224 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| higgs | 1000 | qleaf GPU traversal SP | 3.921 | 4.479 | 5.811 | 4.375 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 1000 | qleaf GPU traversal SP cached all-waves | 3.469 | 3.565 | 5.051 | 3.699 | `qleaf/gpu/persistent/compact/bt:96/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 1000 | qleaf GPU traversal SP cached one-wave | 3.443 | 3.511 | 4.023 | 3.657 | `qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 2000 | qleaf GPU bitmask | 5.463 | 5.723 | 8.303 | 6.006 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:4` |
+| higgs | 2000 | qleaf GPU traversal SP | 4.595 | 4.863 | 7.147 | 5.000 | `qleaf/gpu/persistent/compact/bt:256/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 2000 | qleaf GPU traversal SP cached all-waves | 3.713 | 4.021 | 5.307 | 4.071 | `qleaf/gpu/persistent/compact/bt:96/transposed:0/bitmask:0/cached:1/mapped:1/cacheallwaves:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 2000 | qleaf GPU traversal SP cached one-wave | 3.693 | 3.875 | 5.667 | 4.008 | `qleaf/gpu/persistent/compact/bt:96/transposed:1/bitmask:0/cached:1/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+| higgs | 5000 | qleaf GPU bitmask | 11.519 | 11.943 | 14.543 | 12.774 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:1/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0/tpt:8` |
+| higgs | 5000 | qleaf GPU traversal SP | 6.707 | 6.943 | 9.151 | 7.198 | `qleaf/gpu/persistent/compact/bt:512/transposed:1/bitmask:0/cached:0/mapped:1/crossreduce:0/sp:1/stage:1/seqflag:0` |
+
+## Skips
+- higgs n=5000 qleaf GPU traversal SP cached one-wave: dynamic shared memory too large
+- higgs n=5000 qleaf GPU traversal SP cached all-waves: dynamic shared memory too large
+- higgs n=5000 qleaf GPU traversal SP cached one-wave: persistent grid not co-resident
+- higgs n=5000 qleaf GPU traversal SP cached all-waves: persistent grid not co-resident
+- epsilon n=5000 qleaf GPU traversal SP cached one-wave: dynamic shared memory too large
+- epsilon n=5000 qleaf GPU traversal SP cached all-waves: dynamic shared memory too large
+- epsilon n=5000 qleaf GPU traversal SP cached one-wave: persistent grid not co-resident
+- epsilon n=5000 qleaf GPU traversal SP cached all-waves: persistent grid not co-resident
+- epsilon n=2000 qleaf GPU traversal SP cached one-wave: dynamic shared memory too large
+- epsilon n=2000 qleaf GPU traversal SP cached all-waves: dynamic shared memory too large
+- epsilon n=2000 qleaf GPU traversal SP cached one-wave: persistent grid not co-resident
+- epsilon n=2000 qleaf GPU traversal SP cached all-waves: persistent grid not co-resident
