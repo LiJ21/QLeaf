@@ -2,7 +2,7 @@
 
 QLeaf targets a narrow but real deployment regime: batch-1, host-visible inference for large ensembles of shallow decision trees. In this setting, a model may contain hundreds or thousands of depth-limited trees, but each request consists of a single feature row and must be answered immediately. The objective is not maximum throughput over a large batch, but minimum end-to-end latency for one request.
 
-This regime appears when tree models sit inside latency-sensitive systems: online decisioning, event-driven prediction, real-time ranking, risk checks, simulation loops, scientific control systems, or trading-style pipelines. In such settings, batching may be unavailable or undesirable because waiting for more rows would itself add latency.
+This regime appears when tree models sit inside latency-sensitive systems: online decisioning, event-driven prediction, risk checks, simulation loops, or trading-style pipelines. In such settings, batching may be unavailable or undesirable because waiting for more rows would itself add latency.
 
 ## Why QLeaf?
 
@@ -13,6 +13,28 @@ Tree ensembles remain a strong and widely used model family for tabular data. Gr
 The project is not intended as a general replacement for XGBoost, LightGBM, Treelite, FIL, nvForest, or other mature inference libraries. Those systems solve broader problems. QLeaf instead focuses on a narrower systems question: what design choices help or hurt when the only objective is low-latency single-row inference? The answer depends on workload, hardware, and the trade-off between cost and performance. Rather than hard-coding one universal policy, QLeaf exposes a toolkit of optimization modules that can be enabled according to benchmark results.
 
 At the moment QLeaf supports and benchmarks only a single scalar raw margin per row. This covers regression-style additive tree outputs and binary-classification margins, but full classification support, such as probability/label transforms and multiclass outputs, would require additional logic.
+
+## Quick Start
+
+The default build is CPU-only and builds tests. CUDA and benchmark targets are
+opt-in so a reviewer can clone the repo, build, and run the unit tests without a
+CUDA toolkit:
+
+```bash
+cmake -S . -B build -DQLEAF_BUILD_CUDA=OFF -DQLEAF_BUILD_BENCHMARKS=OFF
+cmake --build build -j
+ctest --test-dir build --output-on-failure
+```
+
+Benchmarks are optional because they require the benchmark-time dependencies
+used by the latency harness:
+
+```bash
+cmake -S . -B build-bench -DQLEAF_BUILD_BENCHMARKS=ON
+cmake --build build-bench -j
+```
+
+CUDA examples and CUDA benchmark targets require `QLEAF_BUILD_CUDA=ON`.
 
 This makes the project both practical and pedagogical. It is practical because the target regime is real. It is pedagogical because the repo keeps the policy choices explicit: CPU traversal versus bitmask evaluation, worker threading, CPU affinity, one-shot CUDA kernels, persistent CUDA workers, mapped memory, transposed tree layouts, polling strategies, feature staging, cross-block coordination, and shared-memory caching.
 
@@ -113,9 +135,9 @@ the layout used by the main benchmarks; `TreeNodeBuffer` is the simpler direct
 node layout. `FairBalancer` partitions trees evenly across workers, and
 `RegressionReducer` sums their raw margins.
 
-The CUDA worker has one extra template layer because the CUDA traversal policy
-is itself a type. Compile CUDA inferrers with a CUDA-enabled target and include
-`gworkers.cuh`.
+The CUDA-only worker has one extra template layer because the CUDA traversal
+policy is itself a type. Compile CUDA inferrers with `QLEAF_BUILD_CUDA=ON`,
+link them from a CUDA-enabled target, and include `gworkers.cuh`.
 
 ```cpp
 #include <vector>
@@ -192,9 +214,13 @@ qleaf::CudaTraversePersistentSP<
 
 So the minimal GPU example uses `BT=512`, transposed traversal, uncached
 non-mapped persistent execution, no cross-block reduction, single-poller request
-detection, no feature staging, and explicit sequence-flag signaling. A GPU
-`worker` entry must include `num_feature`; persistent runs may also set
-`persistent_grid` to override the resident grid size.
+detection, no feature staging, and explicit sequence-flag signaling. Because it
+is non-mapped, passing a temporary or ordinary `std::vector<float>` is safe: the
+worker copies the row to device memory before inference. Mapped persistent
+policies require a stable pinned/mapped host feature buffer whose address does
+not change while the resident kernel is using it. A GPU `worker` entry must
+include `num_feature`; persistent runs may also set `persistent_grid` to
+override the resident grid size.
 
 ## AI Assistance Statement
 
