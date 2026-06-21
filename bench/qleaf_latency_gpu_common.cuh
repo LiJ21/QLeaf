@@ -60,6 +60,7 @@ class MappedFeatureRow {
   MappedFeatureRow(MappedFeatureRow &&other) noexcept
       : data_(std::exchange(other.data_, nullptr)),
         size_(std::exchange(other.size_, 0)) {}
+  size_t size() const { return size_; }
   const float *data() const { return data_; }
   void load(const std::vector<float> &v) const {
     std::copy(v.begin(), v.end(), data_);
