@@ -71,22 +71,24 @@ For the largest forests, the effect is visible directly in the affinity sweeps:
 
 The table below compares best QLeaf CPU branch traversal against external CPU libraries, nvForest CPU, and nvForest's fastest batch-1 GPU mode. Treelite is measured through the TL2cgen C API. XGBoost is measured through the native C API dense predictor (`XGBoosterPredictFromDense`) in the C++ harness. nvForest CPU is measured through the same C++ nvForest harness with host input/output, `threads=1,2,4,8,16`, layouts `depth_first,layered,breadth_first`, `align_bytes=0,64`, and `chunk_size=64`. nvForest GPU uses `rows_per_block_iter=1`; the value shown is its fastest `device_device_sync` configuration, so it is a favorable device-resident external GPU lower bound rather than the same host-output contract.
 
-| dataset | trees | QLeaf CPU best | CPU config | Treelite TL2cgen | XGBoost C API | nvForest CPU | nvForest GPU |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| HIGGS | 500 | 2.177 | physical `threads:8` | 22.943 | 130.239 | 24.687 | 11.399 |
-| HIGGS | 1000 | 3.111 | physical `threads:8` | 75.967 | 211.071 | 35.807 | 14.951 |
-| HIGGS | 2000 | 10.719 | sibling `threads:16` | 234.367 | 377.087 | 49.503 | 22.159 |
-| HIGGS | 5000 | 11.959 | sibling `threads:16` | 639.487 | 1020.927 | 77.887 | 70.591 |
-| epsilon | 500 | 2.427 | physical `threads:8` | 50.911 | 137.215 | 28.383 | 13.655 |
-| epsilon | 1000 | 3.715 | sibling `threads:16` | 119.679 | 218.239 | 38.495 | 17.359 |
-| epsilon | 2000 | 5.931 | physical `threads:8` | 214.399 | 376.319 | 49.695 | 24.607 |
-| epsilon | 5000 | 12.559 | sibling `threads:16` | 357.119 | 768.511 | 74.943 | 42.143 |
+| dataset | trees | QLeaf CPU best | QLeaf CPU turbo ref[^turbo-cpu-ref] | CPU config | Treelite TL2cgen | XGBoost C API | nvForest CPU | nvForest GPU |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| HIGGS | 500 | 2.177 | 0.863 | physical `threads:8` | 22.943 | 130.239 | 24.687 | 11.399 |
+| HIGGS | 1000 | 3.111 | 1.521 | physical `threads:8` | 75.967 | 211.071 | 35.807 | 14.951 |
+| HIGGS | 2000 | 10.719 | 2.549 | sibling `threads:16` | 234.367 | 377.087 | 49.503 | 22.159 |
+| HIGGS | 5000 | 11.959 | 5.679 | sibling `threads:16` | 639.487 | 1020.927 | 77.887 | 70.591 |
+| epsilon | 500 | 2.427 | 1.259 | physical `threads:8` | 50.911 | 137.215 | 28.383 | 13.655 |
+| epsilon | 1000 | 3.715 | 1.768 | sibling `threads:16` | 119.679 | 218.239 | 38.495 | 17.359 |
+| epsilon | 2000 | 5.931 | 2.757 | physical `threads:8` | 214.399 | 376.319 | 49.695 | 24.607 |
+| epsilon | 5000 | 12.559 | 6.191 | sibling `threads:16` | 357.119 | 768.511 | 74.943 | 42.143 |
+
+[^turbo-cpu-ref]: Turbo-enabled reference values come from `bench/results/latency/full_regen_2026_06_18/`, whose manifest records Intel pstate `no_turbo=0`. They are the best QLeaf CPU branch-traversal p50 values from that run, so the winning affinity/thread configuration may differ from the controlled no-turbo `CPU config` column.
 
 QLeaf CPU traversal remains far ahead of the external CPU libraries in this single-row setting. Native XGBoost C API is slower than TL2cgen or nvForest CPU, and nvForest CPU remains well behind QLeaf CPU. The nvForest GPU column should be read as an external GPU lower bound, not as proof about host-visible nvForest latency under the same contract.
 
 The TL2cgen timings above come from the current external C++ harness. The compiled TL2cgen model libraries are staged under `bench/results/latency/full_regen_no_turbo_100k_2026_06_19/external_models/`; provenance is recorded there because fresh TL2cgen compilation of the 5000-tree generated C source was pathologically slow on this machine.
 
-Turning turbo on substantially reduces CPU p50 latency on this desktop. In a turbo-enabled reference measurement on the same machine, QLeaf CPU best p50 was `0.992 us` for HIGGS n=500, `5.483 us` for HIGGS n=5000, and `6.031 us` for epsilon n=5000, compared with `2.177 us`, `11.959 us`, and `12.559 us` in the controlled tables above. The main tables keep turbo disabled for more predictable frequencies and cleaner benchmark hygiene. Absolute latencies, and sometimes CPU-vs-GPU rankings, remain hardware- and policy-dependent; the benchmark should therefore be read primarily as a guide to the effects of the optimization techniques.
+Turning turbo on substantially reduces CPU p50 latency on this desktop, as shown by the turbo reference column. The main tables keep turbo disabled for more predictable frequencies and cleaner benchmark hygiene. Absolute latencies, and sometimes CPU-vs-GPU rankings, remain hardware- and policy-dependent; the benchmark should therefore be read primarily as a guide to the effects of the optimization techniques.
 
 ## One-Shot GPU
 
