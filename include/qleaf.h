@@ -45,18 +45,20 @@ inline void pin_to_core(int core) {
 
 struct DummyCompare {};
 struct FeatureDictCompare {
-  bool operator()(const auto &t1, const auto &t2) {
-    auto i1s = t1.get("indices");
-    auto i2s = t2.get("indices");
-    std::sort(i1s.begin(), i1s.end());
-    std::sort(i2s.begin(), i2s.end());
-    for (auto i : std::views::iota(0u, i1s.size())) {
-      if (i >= i2s.size()) return false;
-      if (i1s[i] < i2s[i]) return true;
-      if (i1s[i] > i2s[i]) return false;
+  bool operator()(const auto &t1, const auto &t2) const {
+    return sorted_features(t1) < sorted_features(t2);
+  }
+
+ private:
+  static std::vector<size_t> sorted_features(const auto &tree) {
+    auto indices = tree.get("indices");
+    std::vector<size_t> features;
+    features.reserve(indices.size());
+    for (const auto &index : indices) {
+      features.push_back(index.template get<size_t>());
     }
-    if (i1s.size() < i2s.size()) return true;
-    return false;
+    std::sort(features.begin(), features.end());
+    return features;
   }
 };
 
@@ -66,11 +68,15 @@ class SortedFairBalancer {
  public:
   using Compare = TCompare;
   SortedFairBalancer(const auto &trees_config, size_t num_workers)
-      : trees_config_(trees_config) {
+      : trees_config_{} {
+    trees_config_.reserve(trees_config.size());
+    for (const auto &tree_config : trees_config) {
+      trees_config_.push_back(tree_config);
+    }
     if constexpr (!std::is_same_v<Compare, DummyCompare>) {
       std::sort(trees_config_.begin(), trees_config_.end(), Compare{});
     }
-    auto num_trees = trees_config.size();
+    auto num_trees = trees_config_.size();
     q_ = num_trees / num_workers;
     r_ = num_trees % num_workers;
   }
@@ -83,7 +89,7 @@ class SortedFairBalancer {
 
  private:
   size_t q_{}, r_{};
-  Config trees_config_;
+  std::vector<Config> trees_config_;
 };
 
 using FairBalancer = SortedFairBalancer<DummyCompare>;
