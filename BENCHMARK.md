@@ -282,13 +282,13 @@ Under the controlled CPU settings used for the main tables, the persistent GPU p
 
 Tree caching is conditional and is not part of the main one-shot story. In the controlled GPU root, the strongest cached-tree result is persistent traversal. It helps the small HIGGS cases when the cached tree set fits:
 
-All rows in this table are traversal kernels (`bitmask:0`). Other parameters are consistent with the best GPU policies: node-major tree layout, mapped memory, single-poller, no seq flag, no cross-block reduction. These cached trees are stored in row-major order in shared memory, and the threads from neighboring trees are arranged to access different banks.
+All rows in this table are traversal kernels (`bitmask:0`). The global uncached column matches the best-result table above. The matched uncached column is the uncached row from the same BT64/BT96 cached sweep, which is useful for isolating the effect of tree caching without mixing in the separate BT256 release sweep. The cached candidates use mapped memory, single-poller, no seq flag, and no cross-block reduction. The cached trees are stored in row-major order in shared memory, and the threads from neighboring trees are arranged to access different banks.
 
-| case | uncached traversal | cached one-wave | cached all-waves |
-| --- | --- | --- | --- |
-| HIGGS n=500 | 4.191 | 3.333 | 3.407 |
-| HIGGS n=1000 | 4.639 | 3.693 | 3.767 |
-| HIGGS n=2000 | 5.159 | 4.179 | 4.255 |
+| case | global uncached traversal | matched uncached | cached one-wave | cached all-waves |
+| --- | --- | --- | --- | --- |
+| HIGGS n=500 | 3.803 | 4.191 | 3.333 | 3.407 |
+| HIGGS n=1000 | 4.511 | 4.639 | 3.693 | 3.767 |
+| HIGGS n=2000 | 4.691 | 5.159 | 4.179 | 4.255 |
 
 For HIGGS n=5000 the cached persistent traversal variants were skipped because the persistent grid was not co-resident. For epsilon, the cached variants that can run do not beat the best uncached final GPU result; the larger feature vector makes the shared-memory/cache trade-off less favorable.
 
