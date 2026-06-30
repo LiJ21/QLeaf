@@ -288,7 +288,7 @@ The final fixed-iteration table chooses the best uncached persistent GPU result 
 
 [^cached-higgs]: Bracketed HIGGS values are cached-tree persistent traversal results from `gpu_cached/`; the leading value remains the uncached final persistent GPU result. HIGGS n=5000 and all epsilon rows keep the uncached final GPU result.
 
-Under the controlled CPU settings used for the main tables, the persistent GPU path beats the best CPU result for HIGGS n=2000, HIGGS n=5000, and epsilon n=5000. It still does not universally beat the CPU path, especially on smaller forests, and the best GPU policy is row-dependent rather than a single universal configuration.
+Under the controlled CPU settings used for the main tables, the persistent GPU path beats the best CPU result for HIGGS n=2000, HIGGS n=5000, and epsilon n=5000. It still does not universally beat the CPU path, especially on smaller forests, and the best GPU policy is row-dependent rather than a single universal configuration. Note that the best CPU results with turbo on still beats GPU across the board, which is indicative of the sensitivity of benchmarks to hardware and machine details. 
 
 ## Cached Trees Bonus
 
