@@ -104,24 +104,24 @@ Each kernel family lives in its own translation unit: `qleaf_latency_gpu_sp.cu` 
 
 The first GPU implementation is one-shot: each request launches a kernel, synchronizes, copies block partials back, and completes the reduction on the host. This is simple and gives a fair request/response shape, but it pays launch and synchronization costs on every request.
 
-The uncached one-shot run compares transposed (node-major) layout against row-major layout at fixed `BT=256`, `TPT=4`, and `nodestride=4`. The point is to isolate the transposed-vs-row-major layout choice under the same one-shot launch shape, not to do a new BT/TPT/nodestride sweep.
+The main algorithmic choice is traversal versus bitmask. Traversal follows one root-to-leaf path per tree. Bitmask evaluation is QuickScorer-like: each node stores a reachable-leaf bitmask and the final result is determined by collecting masks and applying bitwise AND reduction. Bitmask exposes more intra-tree parallelism at the cost of doing more work per tree, and its advantage depends on threads-per-tree (`TPT`) tuning that is unavailable at `TPT=1`.
 
-The main algorithmic comparison is traversal versus bitmask. Traversal follows one root-to-leaf path per tree. Bitmask evaluation is QuickScorer-like: each node stores a reachable-leaf bitmask and the final result is determined by collecting masks and applying bitwise AND reduction. Bitmask exposes more intra-tree parallelism, but it does more work per tree and needs careful TPT tuning.
+The table below uses the one-shot reference runs from the ablation path (`bench/results/latency/ablation_hdr_gpu_locked_no_turbo_newpath_100k_2026_06_19/gpu_ablation_path/`), which records both algorithms alongside the persistent step series under controlled settings: transposed layout, mapped host memory, `TPT=1`; `BT=512` for HIGGS and `BT=1024` for epsilon. nvForest GPU numbers are from `bench/results/latency/gpu_locked_no_turbo_newpath_100k_2026_06_19/external_nvforest_rpb1/`.
 
-| dataset | trees | QLeaf transposed | QLeaf row-major | nvForest host_host | nvForest device_host | nvForest device_device_sync |
+| dataset | trees | QLeaf traversal | QLeaf bitmask TPT1 | nvForest host_host | nvForest device_host | nvForest device_device_sync |
 | --- | --- | --- | --- | --- | --- | --- |
-| HIGGS | 500 | **15.903** | 16.039 | 29.615 | 22.463 | 11.399 |
-| HIGGS | 1000 | 15.999 | **15.959** | 29.647 | 22.543 | 14.951 |
-| HIGGS | 2000 | **16.639** | 17.679 | 37.631 | 30.639 | 22.159 |
-| HIGGS | 5000 | **24.383** | 29.455 | 87.231 | 80.127 | 70.591 |
-| epsilon | 500 | **16.559** | 16.751 | 30.351 | 22.527 | 13.655 |
-| epsilon | 1000 | **16.911** | 17.167 | 37.951 | 30.655 | 17.359 |
-| epsilon | 2000 | **17.871** | 19.775 | 38.847 | 38.879 | 24.607 |
-| epsilon | 5000 | **25.167** | 36.863 | 62.431 | 55.231 | 42.143 |
+| HIGGS | 500 | **9.335** | 12.647 | 29.615 | 22.463 | 11.399 |
+| HIGGS | 1000 | **9.519** | 12.935 | 29.647 | 22.543 | 14.951 |
+| HIGGS | 2000 | **9.615** | 12.799 | 37.631 | 30.639 | 22.159 |
+| HIGGS | 5000 | **11.247** | 14.607 | 87.231 | 80.127 | 70.591 |
+| epsilon | 500 | **10.335** | 14.127 | 30.351 | 22.527 | 13.655 |
+| epsilon | 1000 | **12.239** | 19.119 | 37.951 | 30.655 | 17.359 |
+| epsilon | 2000 | **12.887** | 19.567 | 38.847 | 38.879 | 24.607 |
+| epsilon | 5000 | **14.879** | 21.775 | 62.431 | 55.231 | 42.143 |
 
-One-shot transposed wins 7 of 8 rows; row-major wins: HIGGS n=1000.
+Traversal wins over bitmask at `TPT=1` in every row. Bitmask does strictly more work per tree without yet having intra-tree parallelism to show for it; its advantage only appears after `TPT` tuning, which is addressed in the persistent path below.
 
-Against nvForest's host-host mode, QLeaf one-shot wins every row. Against nvForest's fastest device-output/sync mode, QLeaf loses on the smallest rows but becomes competitive or faster as tree count grows. So one-shot is not hopeless; the main remaining cost is that every request still pays a launch and completion path.
+Against nvForest's host-host mode, QLeaf traversal wins every row by a large margin. Against nvForest's fastest device-resident mode (`device_device_sync`), QLeaf traversal also wins every row including the smallest forests — note that `device_device_sync` keeps input and output on device and does not carry the same host-output contract as QLeaf. The main remaining cost of one-shot is that every request pays a fresh kernel launch and completion path.
 
 ## Naive Persistent Kernel
 
